@@ -7,7 +7,7 @@ Vagrant.configure(2) do |config|
 
   # VMware/Virtualbox ( and also Hyperv/Parallels) 64 bit
   config.vm.box = "generic/debian10"
-  
+
   config.vm.synced_folder '.', '/vagrant'
 
   # This section allows you to customize the Virtualbox VM
@@ -30,6 +30,13 @@ Vagrant.configure(2) do |config|
     # Uncomment the below lines if you have time sync
     # issues with make and incremental builds
     #vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
+  end
+
+  config.vm.provider "hyperv" do |h|
+    h.enable_virtualization_extensions = true
+    h.linked_clone = true
+    # Customize the amount of memory on the VM:
+    h.memory = 512
   end
 
   # This section allows you to customize the VMware VM
