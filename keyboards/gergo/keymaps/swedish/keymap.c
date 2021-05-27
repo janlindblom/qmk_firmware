@@ -12,7 +12,7 @@
 #define SYMB 1 // symbols
 #define NUMB 2 // numbers/motion
 
-// Selected Swedish keys from keymap_swedish.h, could just as well import that one maybe.
+// Selected Swedish keys
 
 #define SE_SECT KC_GRV  // §
 #define SE_PLUS KC_MINS // +
