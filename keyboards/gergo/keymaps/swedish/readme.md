@@ -1,7 +1,9 @@
 # [Gergo! By g Heavy Industries](http://gboards.ca)
 
-![Gergo image](https://4.bp.blogspot.com/-889nMXxgSM0/XCNxwnO5kUI/AAAAAAAA6mI/tZbWgZVCBW0dyZOCGJDkjN06DVax7j8XwCLcBGAs/s1600/48422820_967732713413298_485744639215665152_n.jpg)
+![Gergo image](https://stuff.robotika.ax/gergo_sv.jpg)
 
 This is a swedish/nordic keymap for Gergo, it's based heavily off of the default Gergo layout.
+
+You can view this layout at [keyboard-layout-editor.com](http://www.keyboard-layout-editor.com/#/gists/101ca5470f4c8e375e33f16f18719fb5).
 
 Suggestions and/or improvements are welcome!
