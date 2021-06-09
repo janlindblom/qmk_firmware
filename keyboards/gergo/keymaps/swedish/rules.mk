@@ -6,7 +6,8 @@
 BALLER = no 			# Enable to ball out
 BALLSTEP = 20  			# Multiple in px to move, multiplied by layer number
 SCROLLSTEP = 1 			# Lines to scroll with ball
-MOUSEKEY_ENABLE = yes  		# Mouse keys, needed for baller
+MOUSEKEY_ENABLE = yes  	# Mouse keys, needed for baller
+TAP_DANCE_ENABLE = yes	# Let's dance
 
 #Debug options
 VERBOSE 		 = no
