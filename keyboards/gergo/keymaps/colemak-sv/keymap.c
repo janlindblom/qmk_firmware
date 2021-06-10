@@ -29,15 +29,18 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_SHFT_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
 };
 
+#define U_APPR 0x2248 // ≈
+#define U_INFI 0x221E // ∞
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,---------------------------------------------.                         ,-------------------------------------------.
- * | L2/Esc  |   Q  |   W  |   E  |   R  |   T  |                         |   Y  |   U  |   I  |   O  |   P  |   Å    |
+ * | L2/Esc  |   Q  |   W  |   F  |   P  |   G  |                         |   J  |   L  |   U  |   Y  |   Ö  |   Å    |
  * |---------+------+------+------+------+------|------.           .------|------+------+------+------+------+--------|
- * |Ctrl/BS  |   A  |   S  |  D   |   F  |   G  | Tab  |           | BKSP |   H  |   J  |   K  |   L  |   Ö  |   Ä    |
+ * |Ctrl/BS  |   A  |   R  |  S   |   T  |   D  | Tab  |           | BKSP |   H  |   N  |   E  |   I  |   O  |   Ä    |
  * |---------+------+------+------+------+------|------|           |------|------+------+------+------+------+--------|
- * |Shft/Caps|   Z  |   X  |   C  |   V  |   B  | LMB  |           |      |   N  |   M  | , ;  | . :  | - _  |  ' *   |
+ * |Shft/Caps|   Z  |   X  |   C  |   V  |   B  | LMB  |           |      |   K  |   M  | , ;  | . :  | - _  |  ' *   |
  * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *                    .----------.   .-------.                                 .-----------.   .-----.
  *                    |  Win/Del |   |Ent/ALT|                                 | Tab/AltGr |   |BKSP |
@@ -51,17 +54,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------'                      `--------------'
  */
 [BASE] = LAYOUT_gergo(
-    LT(NUMB, KC_ESC),      KC_Q,  KC_W,   KC_E,   KC_R, KC_T,                                          KC_Y, KC_U,  KC_I,    KC_O,   KC_P,    SE_ARNG,
-    MT(MOD_LCTL, KC_BSPC), KC_A,  KC_S,   KC_D,   KC_F, KC_G, KC_TAB,                        KC_BSPC,  KC_H, KC_J,  KC_K,    KC_L,   SE_ODIA, SE_ADIA,
-    TD(TD_SHFT_CAPS),      KC_Z,  KC_X,   KC_C,   KC_V, KC_B, KC_BTN1, KC_BTN2,     KC_PGDN, KC_TRNS,  KC_N, KC_M,  KC_COMM, KC_DOT, SE_MINS, MT(MOD_RSFT, SE_QUOT),
+    LT(NUMB, KC_ESC),      KC_Q,  KC_W,   KC_F,   KC_P, KC_G,                                          KC_J, KC_L,  KC_U,    KC_Y,   SE_ODIA, SE_ARNG,
+    MT(MOD_LCTL, KC_BSPC), KC_A,  KC_R,   KC_S,   KC_T, KC_D, KC_TAB,                        KC_BSPC,  KC_H, KC_N,  KC_E,    KC_I,   KC_O, SE_ADIA,
+    TD(TD_SHFT_CAPS),      KC_Z,  KC_X,   KC_C,   KC_V, KC_B, KC_BTN1, KC_BTN2,     KC_PGDN, KC_TRNS,  KC_K, KC_M,  KC_COMM, KC_DOT, SE_MINS, MT(MOD_RSFT, SE_QUOT),
     MT(MOD_LGUI, KC_DEL), MT(MOD_LALT, KC_ENT), LT(SYMB, KC_SPC), LT(NUMB, KC_ESC), LT(SYMB, KC_ENT), LT(NUMB, KC_SPC), MT(MOD_RALT, KC_TAB), KC_BSPC
     ),
 /* Keymap 1: Symbols layer
  *
  * ,-------------------------------------------.                         ,-------------------------------------------.
- * |        |  !   |  @   |  {   |  }   |  |   |                         |   £  |  €   |  ?   |  "   |      |        |
+ * |        |  !   |  @   |  {   |  }   |  |   |                         |   £  |  €   |  ?   |  "   |  ∞   |        |
  * |--------+------+------+------+------+------|------.           .------|------+------+------+------+------+--------|
- * |        |  #   |  $   |  (   |  )   |  `   |  § ½ |           |      |   +  |  -   |  /   |  *   |  %   |        |
+ * |        |  #   |  $   |  (   |  )   |  `   |  § ½ |           |  ≈   |   +  |  -   |  /   |  *   |  %   |        |
  * |--------+------+------+------+------+------|------|           |------|------+------+------+------+------+--------|
  * |        |  %   |  ^   |  [   |  ]   |  ~   |  ¤   |           |      |   &  |  =   |  ,   |  :   |  \   |        |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
@@ -77,9 +80,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------'                     `--------------'
  */
 [SYMB] = LAYOUT_gergo(
-    KC_TRNS, SE_EXLM, SE_AT,   SE_LCBR, SE_RCBR, SE_PIPE,                                             SE_PND, SE_EURO, SE_QUES, SE_DQUO, KC_TRNS, KC_TRNS,
-    KC_TRNS, SE_HASH, SE_DLR,  SE_LPRN, SE_RPRN, SE_GRV,  SE_SECT,                          KC_TRNS, SE_PLUS, SE_MINS, SE_SLSH, SE_ASTR, SE_PERC, KC_TRNS,
-    KC_TRNS, SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD, SE_CURR, KC_TRNS,        KC_PGUP, KC_TRNS, SE_AMPR, SE_EQL,  KC_COMM, SE_COLN, SE_BSLS, KC_TRNS,
+    KC_TRNS, SE_EXLM, SE_AT,   SE_LCBR, SE_RCBR, SE_PIPE,                                             SE_PND,  SE_EURO, SE_QUES, SE_DQUO, UC(U_INFI), KC_TRNS,
+    KC_TRNS, SE_HASH, SE_DLR,  SE_LPRN, SE_RPRN, SE_GRV,  SE_SECT,                        UC(U_APPR), SE_PLUS, SE_MINS, SE_SLSH, SE_ASTR, SE_PERC,    KC_TRNS,
+    KC_TRNS, SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD, SE_CURR, KC_TRNS,      KC_PGUP, KC_TRNS,    SE_AMPR, SE_EQL,  KC_COMM, SE_COLN, SE_BSLS,    KC_TRNS,
                                         SE_LABK, SE_RABK, SE_SCLN, SE_EQL,         SE_EQL,  SE_SCLN, KC_TRNS, KC_DEL
     ),
 /* Keymap 2: Pad/Function layer
