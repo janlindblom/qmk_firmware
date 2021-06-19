@@ -13,7 +13,8 @@
 
 #define BASE 0  // default layer
 #define SYMB 1  // symbols
-#define NUMB 2  // numbers/motion
+#define NUMB 2  // numbers etc
+#define MOVE 3  // motion
 
 // Blank template at the bottom
 
@@ -35,19 +36,25 @@ enum combo_events {
     ZC_COPY,
     XV_PASTE,
     ZX_CUT,
+#ifdef WPM_ENABLE
     WC_WPM,
+#endif
 };
 
 const uint16_t PROGMEM copy_combo[] = {KC_Z, KC_C, COMBO_END};
 const uint16_t PROGMEM paste_combo[] = {KC_X, KC_V, COMBO_END};
 const uint16_t PROGMEM cut_combo[] = {KC_Z, KC_X, COMBO_END};
+#ifdef WPM_ENABLE
 const uint16_t PROGMEM wpm_combo[] = {KC_W, KC_C, COMBO_END};
+#endif
 
 combo_t key_combos[COMBO_COUNT] = {
   [ZC_COPY] = COMBO_ACTION(copy_combo),
   [XV_PASTE] = COMBO_ACTION(paste_combo),
   [ZX_CUT] = COMBO_ACTION(cut_combo),
+#ifdef WPM_ENABLE
   [WC_WPM] = COMBO_ACTION(wpm_combo),
+#endif
 };
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
@@ -67,15 +74,14 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
                 tap_code16(LCTL(KC_X));
             }
         break;
+#ifdef WPM_ENABLE
         case WC_WPM:
             if (pressed) {
-                //tap_code16(SK_WPM);
-#ifdef WPM_ENABLE
                 sprintf(wpm_str, "WPM: %03d", get_current_wpm());
                 send_string(wpm_str);
-#endif
             }
         break;
+#endif
     }
 }
 #endif
@@ -155,6 +161,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #define CK_PSTE LCTL(KC_V)
 #define CK_WRGT C(KC_RGHT)
 #define CK_WLFT C(KC_LEFT)
+#define CK_BSP2 LT(MOVE, KC_BSPC)
 
 #define EM_DASH 0x2014
 #define EN_DASH 0x2013
@@ -184,7 +191,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 CK_ESC,  KC_Q, KC_W, KC_E, KC_R, KC_T,                                              KC_Y,   KC_U, KC_I,    KC_O,   KC_P,    SE_ARNG,
 CK_BSPC, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H,                               KC_BSPC, KC_H,   KC_J, KC_K,    KC_L,   SE_ODIA, CK_ADIA,
 CK_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_TAB, CK_PSTE,           KC_PGDN, KC_RALT, KC_N,   KC_M, CK_COMM, CK_DOT, CK_DASH, CK_QUOT,
-                     CK_DEL, CK_ENT1, CK_SPC1, CK_ESC,            CK_ENT2, CK_SPC2, CK_TAB, KC_BSPC
+                     CK_DEL, CK_ENT1, CK_SPC1, CK_ESC,            CK_ENT2, CK_SPC2, CK_TAB, CK_BSP2
     ),
 /* Keymap 1: Symbols layer
  *
@@ -215,7 +222,7 @@ SK_NOT_EQL, SE_EXLM, SE_AT,   SE_LCBR, SE_RCBR, SE_PIPE,                        
 /* Keymap 2: Pad/Function layer
  *
  * ,-------------------------------------------.                         ,-------------------------------------------.
- * |        |   1  |  2   |  3   |  4   |  5   |                         |  6   |  7   |  8   |  9   |  0   |   ⏯    |
+ * |        |   1  |  2   |  3   |  4   |  5   |                         |  6   |  7   |  8   |  9   |  0   |   ⏯   |
  * |--------+------+------+------+------+------|------.           .------|------+------+------+------+------+--------|
  * |        |  F1  | F2   | F3   | F4   | F5   | F6   |           |      | LEFT | DOWN |  UP  | RIGHT|   ⇞  |   🕪    |
  * |--------+------+------+------+------+------|------|           |------|------+------+------+------+------+--------|
@@ -237,6 +244,32 @@ KC_TRNS,  KC_1,  KC_2,  KC_3,   KC_4,    KC_5,                                  
 KC_TRNS, KC_F1, KC_F2, KC_F3,  KC_F4,   KC_F5,   KC_F6,                           KC_TRNS, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_PGUP, KC_VOLU,
 KC_TRNS, KC_F7, KC_F8, KC_F9, KC_F10,  KC_F11,  KC_F12,  CK_CUT,         KC_TRNS, KC_TRNS, CK_WLFT, CK_WRGT, KC_HOME,  KC_END, KC_PGDN, KC_VOLD,
                              KC_MENU, KC_TRNS, KC_TRNS, KC_TRNS,         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
+    ),
+/* Mouse control
+ *
+ * ,-------------------------------------------.                         ,-------------------------------------------.
+ * |        |      |      |  su  |      |      |                         |      |      |  up  |      |      |        |
+ * |--------+------+------+------+------+------|------.           .------|------+------+------+------+------+--------|
+ * |        |      |  sl  |  sd  |  sr  |  su  |      |           |      |      |  le  |  dn  |  ri  |      |        |
+ * |--------+------+------+------+------+------|------|           |------|------+------+------+------+------+--------|
+ * |        |      |      |      |      |  sd  |  m1  |           |      |      |      |      |      |      |        |
+ * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *                        .------.   .------.                                 .------.   .-----.
+ *                        |      |   |      |                                 |      |   |     |
+ *                        '------'   '------'                                 `------.   '-----'
+ *                                        ,-------.       ,-------.
+ *                                        |   m2  |       |       |
+ *                                 ,------|-------|       |-------|------.
+ *                                 |      |       |       |       |      |
+ *                                 |      |       |       |       |      |
+ *                                 |      |       |       |       |      |
+ *                                 `--------------'       `--------------'
+ */
+[MOVE] = LAYOUT_gergo(
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_WH_U, KC_TRNS, KC_TRNS,                                             KC_TRNS, KC_TRNS, KC_MS_U, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_WH_L, KC_WH_D, KC_WH_R, KC_WH_U, KC_TRNS,                           KC_TRNS, KC_TRNS, KC_MS_L, KC_MS_D, KC_MS_R, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_WH_D, KC_BTN1, KC_BTN2,         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                                        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
     ),
 };
 

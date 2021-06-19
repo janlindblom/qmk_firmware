@@ -6,11 +6,14 @@
 BALLER = no             # Enable to ball out
 BALLSTEP = 20           # Multiple in px to move, multiplied by layer number
 SCROLLSTEP = 1          # Lines to scroll with ball
-MOUSEKEY_ENABLE = no    # Mouse keys, needed for baller
+MOUSEKEY_ENABLE = yes    # Mouse keys, needed for baller
 TAP_DANCE_ENABLE = yes  # Let's dance
 UNICODE_ENABLE = yes    # Enable Unicode
 COMBO_ENABLE = yes      # Enable combos
-WPM_ENABLE = yes        # Enable WPM counter
+WPM_ENABLE = no        # Enable WPM counter
+
+SPACE_CADET_ENABLE = no
+GRAVE_ESC_ENABLE = no
 
 #Debug options
 VERBOSE 		 = no
