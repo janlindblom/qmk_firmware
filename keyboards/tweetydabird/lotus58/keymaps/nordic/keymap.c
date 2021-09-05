@@ -217,10 +217,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-   return update_tri_layer_state(state, RAISE, LOWER, _SYSTEM);
-}
-
 #ifdef ENCODER_ENABLE
 
 bool encoder_update_user(uint8_t index, bool clockwise) {
@@ -250,3 +246,62 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 }
 
 #endif
+
+#ifdef RGBLIGHT_LAYERS
+
+const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 6, HSV_RED},
+    {6, 6, HSV_RED}
+);
+
+const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 6, HSV_CYAN},
+    {6, 6, HSV_CYAN}
+);
+// Light LEDs 11 & 12 in purple when keyboard layer 2 is active
+const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 6, HSV_PURPLE},
+    {6, 6, HSV_PURPLE}
+);
+// Light LEDs 13 & 14 in green when keyboard layer 3 is active
+const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 6, HSV_GREEN},
+    {6, 6, HSV_GREEN}
+);
+
+const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
+    my_capslock_layer,
+    my_layer1_layer,    // Overrides caps lock layer
+    my_layer2_layer,    // Overrides other layers
+    my_layer3_layer     // Overrides other layers
+);
+#endif
+
+void keyboard_post_init_user(void) {
+#ifdef RGBLIGHT_LAYERS
+    // Enable the LED layers
+    rgblight_layers = my_rgb_layers;
+#endif
+}
+
+bool led_update_user(led_t led_state) {
+#ifdef RGBLIGHT_LAYERS
+    rgblight_set_layer_state(0, led_state.caps_lock);
+#endif
+    return true;
+}
+
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+#ifdef RGBLIGHT_LAYERS
+    rgblight_set_layer_state(1, layer_state_cmp(state, BASE));
+#endif
+    return state;
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+#ifdef RGBLIGHT_LAYERS
+    rgblight_set_layer_state(2, layer_state_cmp(state, RAISE));
+    rgblight_set_layer_state(3, layer_state_cmp(state, LOWER));
+#endif
+    return update_tri_layer_state(state, RAISE, LOWER, _SYSTEM);
+}
