@@ -164,11 +164,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Keymap 1: Symbols layer
      *
      * ,-------------------------------------------.                         ,-------------------------------------------.
-     * |    ≠   |  !   |  @   |  {   |  }   |  |   |                         |   £  |  €   |  ?   |      |      |        |
+     * |    ≠   |  !   |  @   |  {   |  }   |  |   |                         |   £  |  €   |  ?   | §/½  |   ¤  |        |
      * |--------+------+------+------+------+------|------.           .------|------+------+------+------+------+--------|
-     * |    ≤   |  #   |  $   |  (   |  )   |  `   |  §/½ |           |   ”  |   +  |  -   |  /   |  *   |  %   |   —    |
+     * |    ≤   |  #   |  $   |  (   |  )   |  `   |      |           |   ”  |   +  |  -   |  /   |  *   |  %   |   —    |
      * |--------+------+------+------+------+------|------|           |------|------+------+------+------+------+--------|
-     * |    ≥   |  %   |  ^   |  [   |  ]   |  ~   |  ¤   |           |      |   &  |  =   |  ,   |  :   |  \   |   –    |
+     * |    ≥   |  %   |  ^   |  [   |  ]   |  ~   |      |           |      |   &  |  =   |  ,   |  :   |  \   |   –    |
      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
      *                        .------.   .------.                                 .------.   .-----.
      *                        |  <   |   |   >  |                                 |      |   | Del |
@@ -182,7 +182,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                 `--------------'                     `--------------'
      */
     [SYMB] = LAYOUT_gergo(
-        SK_NOT_EQL, SE_EXLM,   SE_AT, SE_LCBR, SE_RCBR, SE_PIPE,                                              SE_PND, SE_EURO, SE_QUES, KC_TRNS, KC_TRNS, KC_TRNS,
+        SK_NOT_EQL, SE_EXLM,   SE_AT, SE_LCBR, SE_RCBR, SE_PIPE,                                              SE_PND, SE_EURO, SE_QUES, SE_SECT, SE_CURR, KC_TRNS,
             SK_LEQ, SE_HASH,  SE_DLR, SE_LPRN, SE_RPRN,  SE_GRV, SE_SECT,                           SE_DQUO, SE_PLUS, SE_MINS, SE_SLSH, SE_ASTR, SE_PERC, UC(EM_DASH),
             SK_GEQ, SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD, SE_CURR, CK_COPY,         KC_PGUP, KC_TRNS, SE_AMPR, SE_EQL, KC_COMM, SE_COLN, SE_BSLS, UC(EN_DASH),
                                                 SE_LABK, SE_RABK, SE_SCLN, SE_EQL,         SE_EQL, SE_SCLN, KC_TRNS, KC_DEL),
@@ -191,9 +191,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * ,-------------------------------------------.                         ,-------------------------------------------.
      * |        |   1  |  2   |  3   |  4   |  5   |                         |  6   |  7   |  8   |  9   |  0   |   ⏯   |
      * |--------+------+------+------+------+------|------.           .------|------+------+------+------+------+--------|
-     * |        |  F1  | F2   | F3   | F4   | F5   | F6   |           |      | LEFT | DOWN |  UP  | RIGHT|   ⇞  |   🕪    |
+     * |   F1   |  F2  |  F3  |  F4  |  F5  | F6   |      |           |      | LEFT | DOWN |  UP  | RIGHT|   ⇞  |   🕪    |
      * |--------+------+------+------+------+------|------|           |------|------+------+------+------+------+--------|
-     * |        |  F7  | F8   | F9   | F10  | F11  | F12  |           |      | <==  |  ==> | Home | End  |   ⇟  |   🕩    |
+     * |   F7   |  F8  |  F9  | F10  | F11  | F12  |      |           |      | <==  |  ==> | Home | End  |   ⇟  |   🕩    |
      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
      *                        .------.   .------.                                 .------.   .-----.
      *                        | Menu |   |      |                                 |      |   |     |
@@ -218,16 +218,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |--------+------+------+------+------+------|------.           .------|------+------+------+------+------+--------|
      * |        |      |  sl  |  sd  |  sr  |  su  |      |           |      |      |  le  |  dn  |  ri  |      |        |
      * |--------+------+------+------+------+------|------|           |------|------+------+------+------+------+--------|
-     * |        |      |      |      |      |  sd  |  m1  |           |      |      |      |      |      |      |        |
+     * |        |      |      |      |      |  sd  |      |           |      |      |      |      |      |      |        |
      * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
      *                        .------.   .------.                                 .------.   .-----.
      *                        |      |   |      |                                 |      |   |     |
      *                        '------'   '------'                                 `------.   '-----'
      *                                        ,-------.       ,-------.
-     *                                        |   m2  |       |       |
+     *                                        |       |       |       |
      *                                 ,------|-------|       |-------|------.
      *                                 |      |       |       |       |      |
-     *                                 |      |       |       |       |      |
+     *                                 |  m1  |  m2   |       |       |      |
      *                                 |      |       |       |       |      |
      *                                 `--------------'       `--------------'
      */
@@ -235,8 +235,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MOVE] = LAYOUT_gergo(
         KC_TRNS, KC_TRNS, KC_TRNS, KC_WH_U, KC_TRNS, KC_TRNS,                                             KC_TRNS, KC_TRNS, KC_MS_U, KC_TRNS, KC_TRNS, KC_TRNS,
         KC_TRNS, KC_TRNS, KC_WH_L, KC_WH_D, KC_WH_R, KC_WH_U, KC_TRNS,                           KC_TRNS, KC_TRNS, KC_MS_L, KC_MS_D, KC_MS_R, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_WH_D, KC_BTN1, KC_BTN2,         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                                            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_WH_D, KC_TRNS, KC_TRNS,         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                                            KC_TRNS, KC_TRNS, KC_BTN1, KC_BTN2,         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
 
 };
 
@@ -268,7 +268,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 // clang-format on
 
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
 
 #define OLED_SPACE " "
 
