@@ -273,7 +273,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define OLED_SPACE " "
 
 // This part is mainly adapted from users/drashna/oled_stuff.c
-#define OLED_RENDER_LAYER_NAME  "LAYER"
+#define OLED_RENDER_LAYER_NAME  "\nLAYER"
+#define OLED_RENDER_LAYER_BASE  "Base "
 #define OLED_RENDER_LAYER_LOWER "Lower"
 #define OLED_RENDER_LAYER_RAISE "Raise"
 #define OLED_RENDER_LAYER_MOVE  "Move "
@@ -291,10 +292,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void render_layer_state(void) {
     oled_write_P(PSTR(OLED_RENDER_LAYER_NAME), false);
-    oled_write_P(PSTR(OLED_RENDER_LAYER_RAISE), layer_state_is(NUMB));
-    oled_write_P(PSTR(OLED_RENDER_LAYER_LOWER), layer_state_is(SYMB));
-    oled_write_P(PSTR(OLED_RENDER_LAYER_MOVE), layer_state_is(MOVE));
-    oled_write_P(PSTR(OLED_SPACE), false);
+    if (layer_state_is(NUMB)) {
+        oled_write_P(PSTR(OLED_RENDER_LAYER_RAISE), false);
+    } else if (layer_state_is(SYMB)) {
+        oled_write_P(PSTR(OLED_RENDER_LAYER_LOWER), false);
+    } else if (layer_state_is(MOVE)) {
+        oled_write_P(PSTR(OLED_RENDER_LAYER_MOVE), false);
+    } else {
+        oled_write_P(PSTR(OLED_RENDER_LAYER_BASE), false);
+    }
+    //oled_write_P(PSTR(OLED_SPACE), false);
 }
 
 void render_keylock_status(uint8_t led_usb_state) {
@@ -309,7 +316,7 @@ void render_keylock_status(uint8_t led_usb_state) {
 }
 
 void render_mod_status(uint8_t modifiers) {
-    static const char PROGMEM mod_status[5][3] = {{0x9D, 0x9E, 0}, {0xD5, 0xD6, 0}, {0xBD, 0xBE, 0}, {0xD7, 0xD8, 0}, {0xD7, 0xD8, 0}};
+    static const char PROGMEM mod_status[5][3] = {{0xD5, 0xD6, 0}, {0xDB, 0xDC, 0}, {0xD9, 0xDA, 0}, {0xD7, 0xD8, 0}, {0xD7, 0xD8, 0}};
     oled_write_P(PSTR(OLED_RENDER_MODS_NAME), false);
     oled_write_P(mod_status[0], (modifiers & MOD_MASK_SHIFT));
     oled_write_P(mod_status[!keymap_config.swap_lctl_lgui ? 3 : 4], (modifiers & MOD_MASK_GUI));
@@ -330,6 +337,13 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 
 void oled_task_user(void) {
+    static const char PROGMEM font_logo[] = {
+        0x80, 0x81, 0x82, 0x83, 0x84,
+        0xA0, 0xA1, 0xA2, 0xA3, 0xA4,
+        0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0
+    };
+    oled_write_P(font_logo, false);
+
     render_status();
 }
 //     static const char PROGMEM font_logo[] = {
