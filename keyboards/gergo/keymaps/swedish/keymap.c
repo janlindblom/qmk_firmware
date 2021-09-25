@@ -4,6 +4,8 @@
  * @brief Custom nordic/Swedish keymap with OLED support.
  * @version 1.0
  * @date 2021-07-25
+ * 
+ * @copyright Copyright (c) 2021
  */
 
 #include QMK_KEYBOARD_H
@@ -45,7 +47,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
     }
     return true;
-};
+}
 
 // Combos, if enabled
 #ifdef COMBO_ENABLE
@@ -102,15 +104,15 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_DOT_COL]   = ACTION_TAP_DANCE_DOUBLE(KC_DOT, SE_COLN),
     [TD_DASH_USCR] = ACTION_TAP_DANCE_DOUBLE(SE_MINS, S(SE_MINS)),
 };
-#define CK_LSFT TD(TD_SHFT_CAPS)
-#define CK_COMM TD(TD_COM_SCL)
-#define CK_DOT TD(TD_DOT_COL)
-#define CK_DASH TD(TD_DASH_USCR)
+#    define CK_LSFT TD(TD_SHFT_CAPS)
+#    define CK_COMM TD(TD_COM_SCL)
+#    define CK_DOT TD(TD_DOT_COL)
+#    define CK_DASH TD(TD_DASH_USCR)
 #else
-#define CK_LSFT KC_LSFT
-#define CK_COMM KC_COMM
-#define CK_DOT KC_DOT
-#define CK_DASH SE_MINS
+#    define CK_LSFT KC_LSFT
+#    define CK_COMM KC_COMM
+#    define CK_DOT KC_DOT
+#    define CK_DASH SE_MINS
 #endif
 
 // Some defines for the keys below
@@ -131,8 +133,15 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define CK_WLFT C(KC_LEFT)
 #define CK_BSP2 LT(MOVE, KC_BSPC)
 
-#define EM_DASH 0x2014
-#define EN_DASH 0x2013
+#ifdef UNICODE_ENABLE
+#    define EM_DASH 0x2014
+#    define EN_DASH 0x2013
+#    define CK_ENDASH UC(EN_DASH)
+#    define CK_EMDASH UC(EM_DASH)
+#else
+#    define CK_ENDASH KC_TRNS
+#    define CK_EMDASH KC_TRNS
+#endif
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -183,8 +192,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [SYMB] = LAYOUT_gergo(
         SK_NOT_EQL, SE_EXLM,   SE_AT, SE_LCBR, SE_RCBR, SE_PIPE,                                              SE_PND, SE_EURO, SE_QUES, SE_SECT, SE_CURR, KC_TRNS,
-            SK_LEQ, SE_HASH,  SE_DLR, SE_LPRN, SE_RPRN,  SE_GRV, SE_SECT,                           SE_DQUO, SE_PLUS, SE_MINS, SE_SLSH, SE_ASTR, SE_PERC, UC(EM_DASH),
-            SK_GEQ, SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD, SE_CURR, CK_COPY,         KC_PGUP, KC_TRNS, SE_AMPR, SE_EQL, KC_COMM, SE_COLN, SE_BSLS, UC(EN_DASH),
+            SK_LEQ, SE_HASH,  SE_DLR, SE_LPRN, SE_RPRN,  SE_GRV, SE_SECT,                           SE_DQUO, SE_PLUS, SE_MINS, SE_SLSH, SE_ASTR, SE_PERC, CK_EMDASH,
+            SK_GEQ, SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD, SE_CURR, CK_COPY,         KC_PGUP, KC_TRNS, SE_AMPR, SE_EQL, KC_COMM, SE_COLN, SE_BSLS, CK_ENDASH,
                                                 SE_LABK, SE_RABK, SE_SCLN, SE_EQL,         SE_EQL, SE_SCLN, KC_TRNS, KC_DEL),
     /* Keymap 2: Pad/Function layer
      *
@@ -269,30 +278,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // clang-format on
 
 #ifdef OLED_ENABLE
-
-#define OLED_SPACE " "
-
+#    define OLED_SPACE " "
 // This part is mainly adapted from users/drashna/oled_stuff.c
-#define OLED_RENDER_LAYER_NAME  "\nLAYR"
-#define OLED_RENDER_LAYER_BASE  "Base"
-#define OLED_RENDER_LAYER_LOWER "Lowr"
-#define OLED_RENDER_LAYER_RAISE "Rais"
-#define OLED_RENDER_LAYER_MOVE  "Move"
-
-#define OLED_LAYER_DIMMED 0x89
-#define OLED_LAYER_ACTIVE 0x8A
-#define OLED_LAYER_INACTIVE 0x8B
-
-#define OLED_RENDER_LOCK_NAME "\nLOCK"
-#define OLED_RENDER_LOCK_NUML "N"
-#define OLED_RENDER_LOCK_CAPS "C"
-#define OLED_RENDER_LOCK_SCLK "S"
-
-#define OLED_RENDER_MODS_NAME "\nMODS"
-#define OLED_RENDER_MODS_SFT  "S"
-#define OLED_RENDER_MODS_CTL  "C"
-#define OLED_RENDER_MODS_ALT  "A"
-#define OLED_RENDER_MODS_GUI  "G"
+#    define OLED_RENDER_LAYER_NAME "\nLAYR"
+#    define OLED_RENDER_LOCK_NAME "\nLOCK"
+#    define OLED_RENDER_MODS_NAME "\nMODS"
 
 void render_layer_state(void) {
     static const char PROGMEM layer_status[4][9] = {
@@ -313,19 +303,14 @@ void render_layer_state(void) {
     } else {
         oled_write_P(layer_status[0], false);
     }
-
-    // oled_write_P(PSTR(OLED_SPACE), false);
 }
 
 void render_keylock_status(uint8_t led_usb_state) {
     static const char PROGMEM lock_status[3][2] = {{0x96, 0}, {0x97, 0}, {0x98, 0}};
     oled_write_P(PSTR(OLED_RENDER_LOCK_NAME), false);
-    // oled_write_P(PSTR(OLED_SPACE), false);
     oled_write_P(lock_status[0], led_usb_state & (1 << USB_LED_NUM_LOCK));
-    // oled_write_P(PSTR(OLED_SPACE), false);
     oled_write_P(lock_status[1], led_usb_state & (1 << USB_LED_SCROLL_LOCK));
     oled_write_P(lock_status[2], led_usb_state & (1 << USB_LED_CAPS_LOCK));
-    // oled_write_P(PSTR(OLED_SPACE), false);
     oled_write_P(PSTR(OLED_SPACE), false);
     oled_advance_page(true);
 }
@@ -334,41 +319,38 @@ void render_mod_status(uint8_t modifiers) {
     static const char PROGMEM mod_status[5][2] = {{0xAA, 0}, {0xAD, 0}, {0xAC, 0}, {0xAB, 0}, {0xAB, 0}};
     oled_write_P(PSTR(OLED_RENDER_MODS_NAME), false);
     oled_write_P(mod_status[0], (modifiers & MOD_MASK_SHIFT));
-    //oled_write_P(PSTR(OLED_RENDER_MODS_SFT), (modifiers & MOD_MASK_SHIFT));
     oled_write_P(mod_status[!keymap_config.swap_lctl_lgui ? 3 : 4], (modifiers & MOD_MASK_GUI));
-    //oled_write_P(PSTR(OLED_RENDER_MODS_GUI), (modifiers & MOD_MASK_GUI));
-    //oled_write_P(PSTR(OLED_SPACE), false);
     oled_write_P(mod_status[2], (modifiers & MOD_MASK_ALT));
-    //oled_write_P(PSTR(OLED_RENDER_MODS_ALT), (modifiers & MOD_MASK_ALT));
     oled_write_P(mod_status[1], (modifiers & MOD_MASK_CTRL));
-    //oled_write_P(PSTR(OLED_RENDER_MODS_CTL), (modifiers & MOD_MASK_CTRL));
-    //oled_write_P(PSTR(OLED_SPACE), false);
 }
 
 void render_status(void) {
     render_layer_state();
     render_mod_status(get_mods());
     render_keylock_status(host_keyboard_leds());
+#ifdef WPM_ENABLE
+#define OLED_RENDER_WPM_COUNTER "WPM:"
+    uint8_t n = get_current_wpm();
+    char wpm_counter[4];
+    wpm_counter[3] = '\0';
+    wpm_counter[2] = '0' + n % 10;
+    wpm_counter[1] = (n /= 10) % 10 ? '0' + (n) % 10 : (n / 10) % 10 ? '0' : ' ';
+    wpm_counter[0] = n / 10 ? '0' + n / 10 : ' ';
+    oled_write_P(PSTR(OLED_RENDER_WPM_COUNTER), false);
+    //if (padding) {
+    //    for (uint8_t n = padding; n > 0; n--) {
+    //        oled_write_P(PSTR(" "), false);
+    //    }
+    //}
+    oled_write(wpm_counter, false);
+#endif
 }
 
-oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-	return OLED_ROTATION_90;
-}
+oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_90; }
 
 void oled_task_user(void) {
-    static const char PROGMEM font_logo[9] = {
-        0x20, 0x80, 0x81, 0x20,
-        0x20, 0xA0, 0xA1, 0x20, 0
-    };
+    static const char PROGMEM font_logo[9] = {0x20, 0x80, 0x81, 0x20, 0x20, 0xA0, 0xA1, 0x20, 0};
     oled_write_P(font_logo, false);
-
     render_status();
 }
-//     static const char PROGMEM font_logo[] = {
-//         0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,0x90,0x91,0x92,0x93,0x94,
-//         0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,0xb0,0xb1,0xb2,0xb3,0xb4,
-// 		0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,0xd0,0xd1,0xd2,0xd3,0xd4,0};
-// 	oled_write_P(font_logo, false);
-
-// }
 #endif

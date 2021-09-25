@@ -1,7 +1,7 @@
 /**
- * @file retro_font.c
- * @author Jan Lindblom (jan@namnlos.io)
- * @brief A retro font for QMK, with Gergo logo
+ * @file namnlos_font.c
+ * @author Jan Lindblom (jan@robotika.ax)
+ * @brief A retro-inspired font for QMK, with Gergo logo and some icons.
  * @version 1.0
  * @date 2021-09-25
  *

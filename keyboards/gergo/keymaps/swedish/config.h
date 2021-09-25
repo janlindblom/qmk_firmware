@@ -1,3 +1,13 @@
+/**
+ * @file config.h
+ * @author Jan Lindblom (jan@robotika.ax)
+ * @brief Definitions for this keymap.
+ * @version 1.0
+ * @date 2021-09-25
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #pragma once
 
 #undef DEBOUNCE
