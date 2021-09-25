@@ -1,8 +1,8 @@
 /**
  * @file keymap.c
  * @author Jan Lindblom (jan@robotika.ax)
- * @brief Custom nordic/Swedish keymap with OLED support
- * @version 0.1
+ * @brief Custom nordic/Swedish keymap with OLED support.
+ * @version 1.0
  * @date 2021-07-25
  */
 
@@ -273,57 +273,76 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define OLED_SPACE " "
 
 // This part is mainly adapted from users/drashna/oled_stuff.c
-#define OLED_RENDER_LAYER_NAME  "\nLAYER"
-#define OLED_RENDER_LAYER_BASE  "Base "
-#define OLED_RENDER_LAYER_LOWER "Lower"
-#define OLED_RENDER_LAYER_RAISE "Raise"
-#define OLED_RENDER_LAYER_MOVE  "Move "
+#define OLED_RENDER_LAYER_NAME  "\nLAYR"
+#define OLED_RENDER_LAYER_BASE  "Base"
+#define OLED_RENDER_LAYER_LOWER "Lowr"
+#define OLED_RENDER_LAYER_RAISE "Rais"
+#define OLED_RENDER_LAYER_MOVE  "Move"
+
+#define OLED_LAYER_DIMMED 0x89
+#define OLED_LAYER_ACTIVE 0x8A
+#define OLED_LAYER_INACTIVE 0x8B
 
 #define OLED_RENDER_LOCK_NAME "\nLOCK"
-#define OLED_RENDER_LOCK_NUML "Num "
-#define OLED_RENDER_LOCK_CAPS "Caps"
-#define OLED_RENDER_LOCK_SCLK "Scrl"
+#define OLED_RENDER_LOCK_NUML "N"
+#define OLED_RENDER_LOCK_CAPS "C"
+#define OLED_RENDER_LOCK_SCLK "S"
 
-#define OLED_RENDER_MODS_NAME "\nMODS "
-#define OLED_RENDER_MODS_SFT  "Shift"
-#define OLED_RENDER_MODS_CTL  "Ctrl "
-#define OLED_RENDER_MODS_ALT  "Alt  "
-#define OLED_RENDER_MODS_GUI  "GUI  "
+#define OLED_RENDER_MODS_NAME "\nMODS"
+#define OLED_RENDER_MODS_SFT  "S"
+#define OLED_RENDER_MODS_CTL  "C"
+#define OLED_RENDER_MODS_ALT  "A"
+#define OLED_RENDER_MODS_GUI  "G"
 
 void render_layer_state(void) {
+    static const char PROGMEM layer_status[4][9] = {
+        {0x20, 0x8E, 0x8F, 0x20, 0x20, 0xAE, 0xAF, 0x20, 0},  // BASE
+        {0x20, 0x90, 0x91, 0x20, 0x20, 0xB0, 0xB1, 0x20, 0},  // NUMB
+        {0x20, 0x92, 0x93, 0x20, 0x20, 0xB2, 0xB3, 0x20, 0},  // SYMB
+        {0x20, 0x94, 0x95, 0x20, 0x20, 0xB4, 0xB5, 0x20, 0}   // MOVE
+    };
+
     oled_write_P(PSTR(OLED_RENDER_LAYER_NAME), false);
+
     if (layer_state_is(NUMB)) {
-        oled_write_P(PSTR(OLED_RENDER_LAYER_RAISE), false);
+        oled_write_P(layer_status[1], false);
     } else if (layer_state_is(SYMB)) {
-        oled_write_P(PSTR(OLED_RENDER_LAYER_LOWER), false);
+        oled_write_P(layer_status[2], false);
     } else if (layer_state_is(MOVE)) {
-        oled_write_P(PSTR(OLED_RENDER_LAYER_MOVE), false);
+        oled_write_P(layer_status[3], false);
     } else {
-        oled_write_P(PSTR(OLED_RENDER_LAYER_BASE), false);
+        oled_write_P(layer_status[0], false);
     }
-    //oled_write_P(PSTR(OLED_SPACE), false);
+
+    // oled_write_P(PSTR(OLED_SPACE), false);
 }
 
 void render_keylock_status(uint8_t led_usb_state) {
+    static const char PROGMEM lock_status[3][2] = {{0x96, 0}, {0x97, 0}, {0x98, 0}};
     oled_write_P(PSTR(OLED_RENDER_LOCK_NAME), false);
+    // oled_write_P(PSTR(OLED_SPACE), false);
+    oled_write_P(lock_status[0], led_usb_state & (1 << USB_LED_NUM_LOCK));
+    // oled_write_P(PSTR(OLED_SPACE), false);
+    oled_write_P(lock_status[1], led_usb_state & (1 << USB_LED_SCROLL_LOCK));
+    oled_write_P(lock_status[2], led_usb_state & (1 << USB_LED_CAPS_LOCK));
+    // oled_write_P(PSTR(OLED_SPACE), false);
     oled_write_P(PSTR(OLED_SPACE), false);
-    oled_write_P(PSTR(OLED_RENDER_LOCK_NUML), led_usb_state & (1 << USB_LED_NUM_LOCK));
-    oled_write_P(PSTR(OLED_SPACE), false);
-    oled_write_P(PSTR(OLED_RENDER_LOCK_CAPS), led_usb_state & (1 << USB_LED_CAPS_LOCK));
-    oled_write_P(PSTR(OLED_SPACE), false);
-    oled_write_P(PSTR(OLED_RENDER_LOCK_SCLK), led_usb_state & (1 << USB_LED_SCROLL_LOCK));
     oled_advance_page(true);
 }
 
 void render_mod_status(uint8_t modifiers) {
-    static const char PROGMEM mod_status[5][3] = {{0xD5, 0xD6, 0}, {0xDB, 0xDC, 0}, {0xD9, 0xDA, 0}, {0xD7, 0xD8, 0}, {0xD7, 0xD8, 0}};
+    static const char PROGMEM mod_status[5][2] = {{0xAA, 0}, {0xAD, 0}, {0xAC, 0}, {0xAB, 0}, {0xAB, 0}};
     oled_write_P(PSTR(OLED_RENDER_MODS_NAME), false);
     oled_write_P(mod_status[0], (modifiers & MOD_MASK_SHIFT));
+    //oled_write_P(PSTR(OLED_RENDER_MODS_SFT), (modifiers & MOD_MASK_SHIFT));
     oled_write_P(mod_status[!keymap_config.swap_lctl_lgui ? 3 : 4], (modifiers & MOD_MASK_GUI));
-    oled_write_P(PSTR(OLED_SPACE), false);
+    //oled_write_P(PSTR(OLED_RENDER_MODS_GUI), (modifiers & MOD_MASK_GUI));
+    //oled_write_P(PSTR(OLED_SPACE), false);
     oled_write_P(mod_status[2], (modifiers & MOD_MASK_ALT));
+    //oled_write_P(PSTR(OLED_RENDER_MODS_ALT), (modifiers & MOD_MASK_ALT));
     oled_write_P(mod_status[1], (modifiers & MOD_MASK_CTRL));
-    oled_write_P(PSTR(OLED_SPACE), false);
+    //oled_write_P(PSTR(OLED_RENDER_MODS_CTL), (modifiers & MOD_MASK_CTRL));
+    //oled_write_P(PSTR(OLED_SPACE), false);
 }
 
 void render_status(void) {
@@ -337,10 +356,9 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 
 void oled_task_user(void) {
-    static const char PROGMEM font_logo[] = {
-        0x80, 0x81, 0x82, 0x83, 0x84,
-        0xA0, 0xA1, 0xA2, 0xA3, 0xA4,
-        0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0
+    static const char PROGMEM font_logo[9] = {
+        0x20, 0x80, 0x81, 0x20,
+        0x20, 0xA0, 0xA1, 0x20, 0
     };
     oled_write_P(font_logo, false);
 
