@@ -1,4 +1,4 @@
-#define COMBO_COUNT 11
-#define COMBO_TERM 100
+#define COMBO_COUNT 8
+#define COMBO_TERM 80
 #define TAPPING_TERM 140
 #define IGNORE_MOD_TAP_INTERRUPT
