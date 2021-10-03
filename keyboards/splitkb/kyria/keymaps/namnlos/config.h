@@ -1,4 +1,4 @@
-/* Copyright 2019 Thomas Baart <thomas@splitkb.com>
+/* Copyright 2021 Jan Lindblom <jan@namnlos.io>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,26 @@
 #pragma once
 
 #ifdef RGBLIGHT_ENABLE
-#undef RGBLED_NUM
-#define RGBLED_NUM 20
-//#    define RGBLIGHT_ANIMATIONS
 #    define RGBLIGHT_EFFECT_RAINBOW_MOOD
-#    define RGBLIGHT_HUE_STEP  8
-#    define RGBLIGHT_SAT_STEP  8
-#    define RGBLIGHT_VAL_STEP  8
+#    define RGBLIGHT_HUE_STEP 8
+#    define RGBLIGHT_SAT_STEP 8
+#    define RGBLIGHT_VAL_STEP 8
 #    define RGBLIGHT_LIMIT_VAL 150
-#define RGBLIGHT_LAYERS
-#define RGBLIGHT_MAX_LAYERS 5
+#    define RGBLIGHT_LAYERS
+#    define RGBLIGHT_MAX_LAYERS 5
 #endif
 
 // Lets you roll mod-tap keys
 #define IGNORE_MOD_TAP_INTERRUPT
 
+// Save space on pro micro
 #define LAYER_STATE_8BIT
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION
 #define NO_ACTION_ONESHOT
+// Windows Unicode support
+#define UNICODE_SELECTED_MODES UC_WINC
 
 // If you are using an Elite C rev3 on the slave side, uncomment the lines below:
 // #define SPLIT_USB_DETECT
 // #define NO_USB_STARTUP_CHECK
-#define UNICODE_SELECTED_MODES UC_WINC

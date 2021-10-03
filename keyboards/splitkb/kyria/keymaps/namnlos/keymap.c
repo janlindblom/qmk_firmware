@@ -1,4 +1,4 @@
-/* Copyright 2019 Thomas Baart <thomas@splitkb.com>
+/* Copyright 2021 Jan Lindblom <jan@namnlos.io>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,6 +56,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 };
 
+#define NUM      MO(_NUM)
 #define SYM      MO(_SYMB)
 #define NAV      MO(_MOVE)
 #define ADJUST   MO(_ADJUST)
@@ -112,24 +113,20 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define EM_DASH 0x2014
 #define EN_DASH 0x2013
 
-// Note: LAlt/Enter (ALT_ENT) is not the same thing as the keyboard shortcut Alt+Enter.
-// The notation `mod/tap` denotes a key that activates the modifier `mod` when held down, and
-// produces the key `tap` when tapped (i.e. pressed and released).
-
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
  * Base Layer: QWERTY
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * | Esc/L1 |   Q  |   W  |   E  |   R  |   T  |                              |   Y  |   U  |   I  |   O  |   P  |  Bksp  |
+ * |Esc/NUM |   Q  |   W  |   E  |   R  |   T  |                              |   Y  |   U  |   I  |   O  |   P  |   Å    |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |Ctrl/Bsp|   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;  : |Ctrl/' "|
+ * |Ctrl/Bsp|   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  |   Ö  |   Ä    |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | ⇧/Caps |   Z  |   X  |   C  |   V  |   B  | [ {  |CapsLk|  |F-keys|  ] } |   N  |   M  | ,  < | . >  | /  ? | RShift |
+ * | ⇧/Caps |   Z  |   X  |   C  |   V  |   B  | [ {  |CapsLk|  | Bspc |  ] } |   N  |   M  | ,  ; | .  : | -  _ |  '  *  |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |  Del |Enter | LAlt/| Space| Nav  |  | Sym  | Space| AltGr| RGUI | Menu |
- *                        |  Win | Alt  | Enter|      |      |  |      |      |      |      |      |
+ *                        |  Adj | Del  | LAlt/| Space| Esc  |  | Enter| Space| Tab  | Bspc | Bspc |
+ *                        |  ust | GUI  | Enter| SYMB | NUM  |  | SYMB | NUM  | AltGr| Del  | MOVE |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_BASE] = LAYOUT(
@@ -143,13 +140,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Sym Layer: Numbers and symbols
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |    `   |  1   |  2   |  3   |  4   |  5   |                              |   6  |  7   |  8   |  9   |  0   |   =    |
+ * |   !=   |  !   |  @   |  {   |  }   |  |   |                              |   £  |  €   |  ?   |  §   |  ¤   |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |    ~   |  !   |  @   |  #   |  $   |  %   |                              |   ^  |  &   |  *   |  (   |  )   |   +    |
+ * |   <=   |  #   |  $   |  (   |  )   |  `   |                              |   +  |  -   |  /   |  *   |  %   |  ---   |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |    |   |   \  |  :   |  ;   |  -   |  [   |  {   |      |  |      |   }  |   ]  |  _   |  ,   |  .   |  /   |   ?    |
+ * |   >=   |  %   |  ^   |  [   |  ]   |  ~   |  {   |      |  |      |   }  |   &  |  =   |  ,   |  :   |  \   |  --    |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        |  <   |  >   |      |      |      |  |      |      |      | Del  |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
@@ -164,11 +161,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Function Layer: Function keys
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |  F9  | F10  | F11  | F12  |      |                              |      |      |      |      |      |        |
+ * |        |  1   | 2    | 3    | 4    |  5   |                              |  6   |  7   |  8   |  9   |  0   |Ply/Pau |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |  F5  |  F6  |  F7  |  F8  |      |                              |      | Shift| Ctrl |  Alt |  GUI |        |
+ * |   F1   |  F2  |  F3  |  F4  |  F5  |  F6  |                              | Left | Down |  Up  | Right| PgUp | Vol Up |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |  F1  |  F2  |  F3  |  F4  |      |      |      |  |      |      |      |      |      |      |      |        |
+ * |   F7   |  F8  |  F9  | F10  | F11  | F12  |      |      |  |      |      |WLeft |WRight| Home | End  | PgDn | Vol Dn |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
@@ -176,8 +173,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_NUM] = LAYOUT(
       _______,  KC_1  ,  KC_2  ,  KC_3  ,  KC_4  ,  KC_5  ,                                      KC_6  ,  KC_7  ,  KC_8  ,  KC_9  ,  KC_0  , KC_MPLY,
-      KC_F1,    KC_F2 ,  KC_F3 ,  KC_F4 ,  KC_F5 ,  KC_F6 ,                                     KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_PGUP, _______,
-      KC_F7,    KC_F8 ,  KC_F9 ,  KC_F10,  KC_F11,  KC_F12, _______, _______, _______, _______, CK_WLFT, CK_WRGT, KC_HOME,  KC_END, KC_PGDN, _______,
+      KC_F1,    KC_F2 ,  KC_F3 ,  KC_F4 ,  KC_F5 ,  KC_F6 ,                                     KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_PGUP, KC_VOLU,
+      KC_F7,    KC_F8 ,  KC_F9 ,  KC_F10,  KC_F11,  KC_F12, _______, _______, _______, _______, CK_WLFT, CK_WRGT, KC_HOME,  KC_END, KC_PGDN, KC_VOLD,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
@@ -185,11 +182,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Adjust Layer: Default layer settings, RGB
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |      |      |QWERTY|      |      |                              |      |      |      |      |      |        |
+ * |        |      |      |ScrlUp|      |      |                              |      |      | M Up |      |      |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |      |      |Dvorak|      |      |                              | TOG  | SAI  | HUI  | VAI  | MOD  |        |
+ * |        |      |ScrlLt|ScrlDn|ScrlRt|      |                              |      |M Left|M Down|M Rght|      |        |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |      |Colmak|      |      |      |      |  |      |      |      | SAD  | HUD  | VAD  | RMOD |        |
+ * |        |      |      |      |      |      |M Btn1|M Btn2|  |      |      |      |      |      |      |      |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
@@ -197,8 +194,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_MOVE] = LAYOUT(
       _______, _______, _______, KC_WH_U, _______, _______,                                    _______, _______, KC_MS_U, _______,  _______, _______,
-      _______, _______, KC_WH_L, KC_WH_D, KC_WH_R, _______,                                    RGB_TOG, KC_MS_L, KC_MS_D, KC_MS_R,  RGB_MOD, _______,
-      _______, _______, _______, _______, _______, _______,KC_BTN1, KC_BTN2, _______, _______, _______, RGB_SAD, RGB_HUD, RGB_VAD, RGB_RMOD, _______,
+      _______, _______, KC_WH_L, KC_WH_D, KC_WH_R, _______,                                    _______, KC_MS_L, KC_MS_D, KC_MS_R,  _______, _______,
+      _______, _______, _______, _______, _______, _______,KC_BTN1, KC_BTN2, _______, _______, _______, _______, _______, _______,  _______, _______,
                                  _______, _______, _______,_______, _______, _______, _______, _______, _______, _______
     ),
 
@@ -206,11 +203,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Adjust Layer: Default layer settings, RGB
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |      |      |QWERTY|      |      |                              |      |      |      |      |      |        |
+ * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |      |      |Dvorak|      |      |                              | TOG  | SAI  | HUI  | VAI  | MOD  |        |
+ * |        |      |      |      |      |      |                              | TOG  | SAI  | HUI  | VAI  | MOD  |        |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |      |Colmak|      |      |      |      |  |      |      |      | SAD  | HUD  | VAD  | RMOD |        |
+ * |        |      |      |      |      |      |      |      |  |      |      |      | SAD  | HUD  | VAD  | RMOD |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
@@ -222,48 +219,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,_______, _______, _______, _______, _______, RGB_SAD, RGB_HUD, RGB_VAD, RGB_RMOD, _______,
                                  _______, _______, _______,_______, _______, _______, _______, _______, _______, _______
     ),
-
-// /*
-//  * Layer template
-//  *
-//  * ,-------------------------------------------.                              ,-------------------------------------------.
-//  * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
-//  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
-//  * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
-//  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
-//  * |        |      |      |      |      |      |      |      |  |      |      |      |      |      |      |      |        |
-//  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
-//  *                        |      |      |      |      |      |  |      |      |      |      |      |
-//  *                        |      |      |      |      |      |  |      |      |      |      |      |
-//  *                        `----------------------------------'  `----------------------------------'
-//  */
-//     [_LAYERINDEX] = LAYOUT(
-//       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-//       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-//       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-//                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-//     ),
 };
+
+#ifdef WPM_ENABLE
+char wpm_str[4];
+#endif
 
 #ifdef RGBLIGHT_ENABLE
 const rgblight_segment_t PROGMEM base_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 10, HSV_CYAN}
 );
-// Light LEDs 11 & 12 in purple when keyboard layer 2 is active
 const rgblight_segment_t PROGMEM symb_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 10, HSV_PURPLE}
 );
-// Light LEDs 13 & 14 in green when keyboard layer 3 is active
 const rgblight_segment_t PROGMEM num_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 10, HSV_GREEN}
+    {0, 20, HSV_GREEN}
 );
-
 const rgblight_segment_t PROGMEM move_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 10, HSV_BLUE}
+    {0, 20, HSV_BLUE}
 );
-
 const rgblight_segment_t PROGMEM adjust_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 10, HSV_PINK}
+    {0, 20, HSV_PINK}
+);
+const rgblight_segment_t PROGMEM capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 20, HSV_RED}
 );
 
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
@@ -271,32 +250,13 @@ const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
     symb_layer,    // Overrides other layers
     num_layer,     // Overrides other layers
     move_layer,
-    adjust_layer
+    adjust_layer,
+    capslock_layer
 );
-
-void keyboard_post_init_user(void) {
-    // Enable the LED layers
-    rgblight_layers = my_rgb_layers;
-}
-
-layer_state_t default_layer_state_set_user(layer_state_t state) {
-    rgblight_set_layer_state(0, layer_state_cmp(state, _BASE));
-    return state;
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    rgblight_set_layer_state(1, layer_state_cmp(state, _SYMB));
-    rgblight_set_layer_state(2, layer_state_cmp(state, _NUM));
-    rgblight_set_layer_state(3, layer_state_cmp(state, _MOVE));
-    rgblight_set_layer_state(4, layer_state_cmp(state, _ADJUST));
-    return state;
-}
 #endif
 
 #ifdef OLED_ENABLE
-
 void oled_task_user(void) {
-
     if (is_keyboard_master()) {
         // QMK Logo and version information
         // clang-format off
@@ -337,7 +297,19 @@ void oled_task_user(void) {
         oled_write_P(led_usb_state.caps_lock ?   PSTR("Caps ") : PSTR("     "), false);
         oled_write_P(led_usb_state.scroll_lock ? PSTR("Scrl ") : PSTR("     "), false);
     } else {
-// clang-format off
+        // Non-master side
+#    ifdef WPM_ENABLE
+uint8_t n = get_current_wpm();
+    wpm_str[3] = '\0';
+    wpm_str[2] = '0' + n % 10;
+    wpm_str[1] = '0' + (n /= 10) % 10;
+    wpm_str[0] = '0' + n / 10 ;
+    oled_write_P(PSTR("\n"), false);
+    oled_write_P(PSTR("WPM:          "), false);
+    oled_write(wpm_str, false);
+    oled_write_P(PSTR("\n"), false);
+#    else
+        // clang-format off
         static const char PROGMEM kyria_logo[] = {
             0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128,128,192,224,240,112,120, 56, 60, 28, 30, 14, 14, 14,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7, 14, 14, 14, 30, 28, 60, 56,120,112,240,224,192,128,128,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
             0,  0,  0,  0,  0,  0,  0,192,224,240,124, 62, 31, 15,  7,  3,  1,128,192,224,240,120, 56, 60, 28, 30, 14, 14,  7,  7,135,231,127, 31,255,255, 31,127,231,135,  7,  7, 14, 14, 30, 28, 60, 56,120,240,224,192,128,  1,  3,  7, 15, 31, 62,124,240,224,192,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -350,7 +322,39 @@ void oled_task_user(void) {
         };
         // clang-format on
         oled_write_raw_P(kyria_logo, sizeof(kyria_logo));
+#    endif
     }
 }
-
 #endif
+
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+#ifdef RGBLIGHT_ENABLE
+    rgblight_set_layer_state(0, layer_state_cmp(state, _BASE));
+#endif
+    return state;
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+#ifdef RGBLIGHT_ENABLE
+    rgblight_set_layer_state(1, layer_state_cmp(state, _SYMB));
+    rgblight_set_layer_state(2, layer_state_cmp(state, _NUM));
+    rgblight_set_layer_state(3, layer_state_cmp(state, _MOVE));
+    rgblight_set_layer_state(4, layer_state_cmp(state, _ADJUST));
+#endif
+    return state;
+}
+
+void keyboard_post_init_user(void) {
+#ifdef RGBLIGHT_ENABLE
+    // Enable the LED layers
+    rgblight_layers = my_rgb_layers;
+    rgblight_enable();
+#endif
+}
+
+bool led_update_user(led_t led_state) {
+#ifdef RGBLIGHT_ENABLE
+    rgblight_set_layer_state(5, led_state.caps_lock);
+    return true;
+#endif
+}
