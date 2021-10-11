@@ -1,1 +1,1 @@
-# The default keymap for lotus58
+Default keymap
