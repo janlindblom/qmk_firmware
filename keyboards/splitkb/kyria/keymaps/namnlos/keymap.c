@@ -123,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |Ctrl/Bsp|   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  |   Ö  |   Ä    |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | ⇧/Caps |   Z  |   X  |   C  |   V  |   B  | [ {  |CapsLk|  | Bspc |  ] } |   N  |   M  | ,  ; | .  : | -  _ |  '  *  |
+ * | ⇧/Caps |   Z  |   X  |   C  |   V  |   B  | Tab  |Paste |  | Bspc |  ] } |   N  |   M  | ,  ; | .  : | -  _ |  '  *  |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |  Adj | Del  | LAlt/| Space| Esc  |  | Enter| Space| Tab  | Bspc | Bspc |
  *                        |  ust | GUI  | Enter| SYMB | NUM  |  | SYMB | NUM  | AltGr| Del  | MOVE |
@@ -132,7 +132,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
      CK_ESC  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                         KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , SE_ARNG,
      CK_BSPC , KC_A ,  KC_S   ,  KC_D  ,   KC_F ,   KC_G ,                                         KC_H,   KC_J ,  KC_K ,   KC_L ,SE_ODIA, CK_ADIA,
-     CK_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_LBRC,KC_CAPS,     KC_BSPC, KC_RBRC,  KC_N,   KC_M ,CK_COMM,  CK_DOT,CK_DASH, CK_QUOT,
+     CK_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_TAB, CK_PSTE,     KC_PGDN, KC_BSPC,  KC_N,   KC_M ,CK_COMM,  CK_DOT,CK_DASH, CK_QUOT,
                                 ADJUST , CK_DEL , CK_ENT1, CK_SPC1, CK_ESC,     CK_ENT2, CK_SPC2,CK_TAB, CK_BSP2,CK_BSP2
     ),
 
@@ -144,7 +144,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |   <=   |  #   |  $   |  (   |  )   |  `   |                              |   +  |  -   |  /   |  *   |  %   |  ---   |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |   >=   |  %   |  ^   |  [   |  ]   |  ~   |  {   |      |  |      |   }  |   &  |  =   |  ,   |  :   |  \   |  --    |
+ * |   >=   |  %   |  ^   |  [   |  ]   |  ~   |  {   | Copy |  |   "  |   }  |   &  |  =   |  ,   |  :   |  \   |  --    |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |  <   |  >   |      |      |      |  |      |      |      | Del  |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
@@ -153,7 +153,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_SYMB] = LAYOUT(
    SK_NOT_EQL, SE_EXLM,   SE_AT, SE_LCBR, SE_RCBR, SE_PIPE,                                      SE_PND, SE_EURO, SE_QUES, SE_SECT, SE_CURR, KC_TRNS,
        SK_LEQ, SE_HASH,  SE_DLR, SE_LPRN, SE_RPRN,  SE_GRV,                                     SE_PLUS, SE_MINS, SE_SLSH, SE_ASTR, SE_PERC, UC(EM_DASH),
-       SK_GEQ, SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD, KC_LCBR, _______, _______, KC_RCBR, SE_AMPR, SE_EQL , KC_COMM, SE_COLN, SE_BSLS, UC(EN_DASH),
+       SK_GEQ, SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD, _______, CK_COPY, KC_PGUP, SE_DQUO, SE_AMPR, SE_EQL , KC_COMM, SE_COLN, SE_BSLS, UC(EN_DASH),
                                  SE_LABK, SE_RABK, _______, _______, _______, _______, _______, _______, KC_DEL , _______
     ),
 
@@ -174,12 +174,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NUM] = LAYOUT(
       _______,  KC_1  ,  KC_2  ,  KC_3  ,  KC_4  ,  KC_5  ,                                      KC_6  ,  KC_7  ,  KC_8  ,  KC_9  ,  KC_0  , KC_MPLY,
       KC_F1,    KC_F2 ,  KC_F3 ,  KC_F4 ,  KC_F5 ,  KC_F6 ,                                     KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_PGUP, KC_VOLU,
-      KC_F7,    KC_F8 ,  KC_F9 ,  KC_F10,  KC_F11,  KC_F12, _______, _______, _______, _______, CK_WLFT, CK_WRGT, KC_HOME,  KC_END, KC_PGDN, KC_VOLD,
+      KC_F7,    KC_F8 ,  KC_F9 ,  KC_F10,  KC_F11,  KC_F12, _______, CK_CUT,  _______, _______, CK_WLFT, CK_WRGT, KC_HOME,  KC_END, KC_PGDN, KC_VOLD,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
 /*
- * Adjust Layer: Default layer settings, RGB
+ * Mouse Layer
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
  * |        |      |      |ScrlUp|      |      |                              |      |      | M Up |      |      |        |
@@ -222,52 +222,42 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 #ifdef WPM_ENABLE
-char wpm_str[4];
-#endif
+char wpm_str[10];
 
-#ifdef RGBLIGHT_ENABLE
-const rgblight_segment_t PROGMEM base_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 10, HSV_CYAN}
-);
-const rgblight_segment_t PROGMEM symb_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 10, HSV_PURPLE}
-);
-const rgblight_segment_t PROGMEM num_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 20, HSV_GREEN}
-);
-const rgblight_segment_t PROGMEM move_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 20, HSV_BLUE}
-);
-const rgblight_segment_t PROGMEM adjust_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 20, HSV_PINK}
-);
-const rgblight_segment_t PROGMEM capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 20, HSV_RED}
-);
+// WPM-responsive animation stuff here
+#define IDLE_FRAMES 2
+#define IDLE_SPEED 10 // below this wpm value your animation will idle
 
-const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
-    base_layer,    // Overrides caps lock layer
-    symb_layer,    // Overrides other layers
-    num_layer,     // Overrides other layers
-    move_layer,
-    adjust_layer,
-    capslock_layer
-);
+
+#define TAP_FRAMES 3
+
+#define ANIM_FRAME_DURATION 400 // how long each frame lasts in ms
+// #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
+#define ANIM_SIZE 896 // number of bytes in array, minimize for adequate firmware size, max is 1024
+
+uint32_t anim_timer = 0;
+uint32_t anim_sleep = 0;
+uint8_t current_idle_frame = 0;
+// uint8_t current_prep_frame = 0; // uncomment if PREP_FRAMES >1
+uint8_t current_tap_frame = 0;
+
+bool wpm_keycode_user(uint16_t keycode) {
+	return true;
+}
 #endif
 
 #ifdef OLED_ENABLE
 void oled_task_user(void) {
-    if (is_keyboard_master()) {
-        // QMK Logo and version information
+    // QMK Logo and version information
         // clang-format off
         static const char PROGMEM qmk_logo[] = {
             0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,0x90,0x91,0x92,0x93,0x94,
             0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,0xb0,0xb1,0xb2,0xb3,0xb4,
             0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,0xd0,0xd1,0xd2,0xd3,0xd4,0};
         // clang-format on
-
+    if (is_keyboard_master()) {
         oled_write_P(qmk_logo, false);
-        oled_write_P(PSTR("Kyria rev 1.4\n\n"), false);
+        oled_write_P(PSTR("Kyria rev 1.4\n"), false);
 
         // Host Keyboard Layer Status
         oled_write_P(PSTR("Layer: "), false);
@@ -296,19 +286,17 @@ void oled_task_user(void) {
         oled_write_P(led_usb_state.num_lock ?    PSTR("Num  ") : PSTR("     "), false);
         oled_write_P(led_usb_state.caps_lock ?   PSTR("Caps ") : PSTR("     "), false);
         oled_write_P(led_usb_state.scroll_lock ? PSTR("Scrl ") : PSTR("     "), false);
+#    ifdef WPM_ENABLE
+        uint8_t n = get_current_wpm();
+        wpm_str[3] = '\0';
+        wpm_str[2] = '0' + n % 10;
+        wpm_str[1] = '0' + (n /= 10) % 10;
+        wpm_str[0] = '0' + n / 10 ;
+        oled_write_P(PSTR("\nWPM: "), false);
+        oled_write(wpm_str, false);
+#    endif
     } else {
         // Non-master side
-#    ifdef WPM_ENABLE
-uint8_t n = get_current_wpm();
-    wpm_str[3] = '\0';
-    wpm_str[2] = '0' + n % 10;
-    wpm_str[1] = '0' + (n /= 10) % 10;
-    wpm_str[0] = '0' + n / 10 ;
-    oled_write_P(PSTR("\n"), false);
-    oled_write_P(PSTR("WPM:          "), false);
-    oled_write(wpm_str, false);
-    oled_write_P(PSTR("\n"), false);
-#    else
         // clang-format off
         static const char PROGMEM kyria_logo[] = {
             0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128,128,192,224,240,112,120, 56, 60, 28, 30, 14, 14, 14,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7, 14, 14, 14, 30, 28, 60, 56,120,112,240,224,192,128,128,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -322,9 +310,38 @@ uint8_t n = get_current_wpm();
         };
         // clang-format on
         oled_write_raw_P(kyria_logo, sizeof(kyria_logo));
-#    endif
     }
 }
+#endif
+
+#ifdef RGBLIGHT_ENABLE
+const rgblight_segment_t PROGMEM base_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 20, HSV_CYAN}
+);
+const rgblight_segment_t PROGMEM symb_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 20, HSV_PURPLE}
+);
+const rgblight_segment_t PROGMEM num_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 20, HSV_GREEN}
+);
+const rgblight_segment_t PROGMEM move_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 20, HSV_BLUE}
+);
+const rgblight_segment_t PROGMEM adjust_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 20, HSV_PINK}
+);
+const rgblight_segment_t PROGMEM capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 20, HSV_RED}
+);
+
+const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
+    base_layer,
+    symb_layer,
+    num_layer,
+    move_layer,
+    adjust_layer,
+    capslock_layer
+);
 #endif
 
 layer_state_t default_layer_state_set_user(layer_state_t state) {
@@ -355,6 +372,6 @@ void keyboard_post_init_user(void) {
 bool led_update_user(led_t led_state) {
 #ifdef RGBLIGHT_ENABLE
     rgblight_set_layer_state(5, led_state.caps_lock);
-    return true;
 #endif
+    return true;
 }
