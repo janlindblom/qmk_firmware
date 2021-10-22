@@ -123,17 +123,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |Ctrl/Bsp|   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  |   Ö  |   Ä    |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | ⇧/Caps |   Z  |   X  |   C  |   V  |   B  | Tab  |Paste |  | Bspc |  ] } |   N  |   M  | ,  ; | .  : | -  _ |  '  *  |
+ * | ⇧/Caps |   Z  |   X  |   C  |   V  |   B  | Tab  |Paste |  | PgDn | Bspc |   N  |   M  | ,  ; | .  : | -  _ |  '  *  |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |  Adj | Del  | LAlt/| Space| Esc  |  | Enter| Space| Tab  | Bspc | Bspc |
- *                        |  ust | GUI  | Enter| SYMB | NUM  |  | SYMB | NUM  | AltGr| Del  | MOVE |
+ *                        |  ust | GUI  | Enter| SYMB | NUM  |  | SYMB | NUM  | AltGr|      | MOVE |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_BASE] = LAYOUT(
-     CK_ESC  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                         KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , SE_ARNG,
-     CK_BSPC , KC_A ,  KC_S   ,  KC_D  ,   KC_F ,   KC_G ,                                         KC_H,   KC_J ,  KC_K ,   KC_L ,SE_ODIA, CK_ADIA,
-     CK_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , KC_TAB, CK_PSTE,     KC_PGDN, KC_BSPC,  KC_N,   KC_M ,CK_COMM,  CK_DOT,CK_DASH, CK_QUOT,
-                                ADJUST , CK_DEL , CK_ENT1, CK_SPC1, CK_ESC,     CK_ENT2, CK_SPC2,CK_TAB, CK_BSP2,CK_BSP2
+     CK_ESC , KC_Q ,  KC_W   ,  KC_E ,   KC_R,   KC_T ,                                         KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , SE_ARNG,
+     CK_BSPC, KC_A ,  KC_S   ,  KC_D ,   KC_F,   KC_G ,                                         KC_H,   KC_J ,  KC_K ,   KC_L ,SE_ODIA, CK_ADIA,
+     CK_LSFT, KC_Z ,  KC_X   ,  KC_C ,   KC_V,   KC_B ,  KC_TAB,CK_PSTE,     KC_PGDN, KC_BSPC,  KC_N,   KC_M ,CK_COMM,  CK_DOT,CK_DASH, CK_QUOT,
+                               ADJUST, CK_DEL, CK_ENT1, CK_SPC1, CK_ESC,     CK_ENT2, CK_SPC2,CK_TAB, CK_BSP2,CK_BSP2
     ),
 
 /*
@@ -144,7 +144,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |   <=   |  #   |  $   |  (   |  )   |  `   |                              |   +  |  -   |  /   |  *   |  %   |  ---   |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |   >=   |  %   |  ^   |  [   |  ]   |  ~   |  {   | Copy |  |   "  |   }  |   &  |  =   |  ,   |  :   |  \   |  --    |
+ * |   >=   |  %   |  ^   |  [   |  ]   |  ~   |      | Copy |  | PgUp |   "  |   &  |  =   |  ,   |  :   |  \   |  --    |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |  <   |  >   |      |      |      |  |      |      |      | Del  |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
