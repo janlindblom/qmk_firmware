@@ -46,31 +46,31 @@ enum layers {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MAIN] = LAYOUT(
-                     KC_P,  KC_L,  KC_C, KC_F,         KC_K,    KC_U,    KC_O,   KC_Y,
-        KC_V, KC_R,  KC_N,  KC_T,  KC_S, KC_D,         KC_QUOT, KC_A,    KC_E,   KC_I,    KC_H,    KC_Q,
-              KC_Z,  KC_B,  KC_M,  KC_G, KC_W,         KC_MINS, KC_COMM, KC_DOT, KC_SCLN, KC_SLSH,
-                                   LMOD, SPC_NAV,      RSFT_,   RMOD
+                     KC_P,  KC_L,  KC_C, KC_F,         KC_SLSH,  KC_DOT, KC_QUOT, KC_SCLN,
+        KC_V, KC_R,  KC_N,  KC_T,  KC_S, KC_D,         KC_COMM,  KC_A,   KC_E,    KC_I,    KC_H, KC_Q,
+              KC_Z,  KC_B,  KC_M,  KC_G, KC_W,         KC_MINUS, KC_U,   KC_O,    KC_Y,    KC_K,
+                                   LMOD, SPC_NAV,      RSFT_,    RMOD
     ),
 
     [_SYM_LMOD] = LAYOUT(
-                        KC_NO,   C(S(KC_TAB)), C(KC_TAB),  KC_NO,            S(KC_LBRC), KC_DEL,   S(KC_RBRC), S(KC_3),
-        KC_CAPS, LSFT_, LALT_,   LCTL_,        LGUI_,      KC_PSCR,          S(KC_9),    KC_BSPC,  S(KC_0),    S(KC_COMM), S(KC_2),   KC_BSLS,
-                 KC_NO, C(KC_W), C(KC_Q),      A(KC_LEFT), A(KC_RIGHT),      KC_LBRC,    KC_ENTER, KC_RBRC,    S(KC_DOT),  S(KC_GRV),
+                        KC_NO,   C(S(KC_TAB)), C(KC_TAB),  KC_NO,            S(KC_LBRC), KC_DEL,   S(KC_RBRC), S(KC_GRV),
+        KC_CAPS, LSFT_, LALT_,   LCTL_,        LGUI_,      KC_PSCR,          S(KC_9),    KC_BSPC,  S(KC_0),    S(KC_COMM), S(KC_3), S(KC_2),
+                 KC_NO, C(KC_W), C(KC_Q),      A(KC_LEFT), A(KC_RIGHT),      KC_LBRC,    KC_ENTER, KC_RBRC,    S(KC_DOT),  KC_BSLS,
                                                KC_NO,      KC_NO,            KC_TRNS,    FN
     ),
 
     [_NUM_RMOD] = LAYOUT(
-                             KC_7,  KC_8,  KC_9,   S(KC_8),        KC_NO, RSG_,    KC_NO,  KC_NO,
+                             KC_7,  KC_8,  KC_9,   S(KC_8),        KC_NO, RSG_,    KC_NO,   KC_NO,
         S(KC_BSLS), S(KC_7), KC_1,  KC_2,  KC_3,   KC_EQL,         KC_NO, RGUI_,   RCTL_,   RALT_,   RSFT_, KC_NO,
-                    S(KC_4), KC_4,  KC_5,  KC_6,   S(KC_EQL),      KC_NO, C(KC_D), C(KC_C), C(KC_V), KC_NO,
+                    S(KC_4), KC_4,  KC_5,  KC_6,   S(KC_EQL),      KC_NO, C(KC_C), C(KC_D), C(KC_V), KC_NO,
                                            KC_DOT, KC_0,           KC_NO, KC_NO
     ),
 
     [_NAV] = LAYOUT(
-                          KC_VOLD, KC_VOLU, KC_MNXT,  KC_MUTE,      RCTL_,   G(KC_D),     G(S(KC_D)), G(KC_Q),
-        KC_MPRV, KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_MPLY,      RSG_,    G(KC_LEFT),  G(KC_DOWN), G(KC_UP), G(KC_RIGHT), KC_NO,
-                 KC_HOME, KC_PGDN, KC_PGUP, KC_END,   KC_MSTP,      RALT_,   G(KC_ENTER), G(KC_O),    G(KC_N),  KC_NO,
-                                            KC_NO,    KC_NO,        KC_TRNS, RAG_
+                          KC_VOLD, KC_VOLU, KC_MNXT,  KC_MUTE,      RALT_,   G(KC_D),     G(S(KC_D)), G(KC_Q),
+        KC_MPRV, KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_MPLY,      RAG_,    G(KC_LEFT),  G(KC_DOWN), G(KC_UP), G(KC_RIGHT), KC_NO,
+                 KC_HOME, KC_PGDN, KC_PGUP, KC_END,   KC_MSTP,      RCTL_,   G(KC_ENTER), G(KC_O),    G(KC_N),  KC_NO,
+                                            KC_NO,    KC_NO,        KC_TRNS, RCA_
     ),
 
     [_FN] = LAYOUT(
@@ -82,28 +82,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 enum combos {
-    MG_TAB,
-    BM_ESCAPE,
     PC_J,
     BG_X,
-    CD_GRAVE,
-    DS_PERCENT,
+    BM_ESCAPE,
+    MG_TAB,
+    DQ_GRAVE,
+    QS_PERCENT,
 };
 
-const uint16_t PROGMEM tab_combo[] = {KC_M, KC_G, COMBO_END};
-const uint16_t PROGMEM escape_combo[] = {KC_B, KC_M, COMBO_END};
 const uint16_t PROGMEM j_combo[] = {KC_P, KC_C, COMBO_END};
 const uint16_t PROGMEM x_combo[] = {KC_B, KC_G, COMBO_END};
-const uint16_t PROGMEM grave_combo[] = {KC_COMM, KC_DOT, COMBO_END};
-const uint16_t PROGMEM percent_combo[] = {KC_DOT, KC_SCLN, COMBO_END};
+const uint16_t PROGMEM escape_combo[] = {KC_B, KC_M, COMBO_END};
+const uint16_t PROGMEM tab_combo[] = {KC_M, KC_G, COMBO_END};
+const uint16_t PROGMEM grave_combo[] = {KC_DOT, KC_QUOT, COMBO_END};
+const uint16_t PROGMEM percent_combo[] = {KC_QUOT, KC_SCLN, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
-    [MG_TAB]     = COMBO(tab_combo, KC_TAB),
-    [BM_ESCAPE]  = COMBO(escape_combo, KC_ESC),
     [PC_J]       = COMBO(j_combo, KC_J),
     [BG_X]       = COMBO(x_combo, KC_X),
-    [CD_GRAVE]   = COMBO(grave_combo, KC_GRAVE),
-    [DS_PERCENT] = COMBO(percent_combo, S(KC_5)),
+    [BM_ESCAPE]  = COMBO(escape_combo, KC_ESC),
+    [MG_TAB]     = COMBO(tab_combo, S(KC_TAB)),
+    [DQ_GRAVE]   = COMBO(grave_combo, KC_GRAVE),
+    [QS_PERCENT] = COMBO(percent_combo, S(KC_5)),
 };
 
 const key_override_t question_mark_override = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, S(KC_SLSH));
