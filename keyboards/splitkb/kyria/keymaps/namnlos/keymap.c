@@ -257,21 +257,21 @@ static const int8_t PROGMEM nodes[8][3] = {
     {16, 16, -16},
     {16, 16, 16}
     };
-/*
-static const uint8_t edges[12][2]  = {
+
+static const uint8_t edges[12][2] = {
     {0, 1}, {1, 3}, {3, 2},
     {2, 0}, {4, 5}, {5, 7},
     {7, 6}, {6, 4}, {0, 4},
     {1, 5}, {2, 6}, {3, 7}
     };
-*/
+
 static void rotate_cube(float angleX, float angleY) {
     float sinX = sin(angleX);
 	float cosX = cos(angleX);
 	float sinY = sin(angleY);
 	float cosY = cos(angleY);
     for (size_t i = 0; i < (sizeof(nodes) / sizeof(nodes[0])); i++) {
-        int8_t node[3] = *nodes[i];
+        int8_t node[3] = &nodes[i];
         int8_t x = node[0];
 		int8_t y = node[1];
 		int8_t z = node[2];
@@ -286,22 +286,22 @@ static void rotate_cube(float angleX, float angleY) {
 
 }
 
-static void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
-    uint8_t dx = abs(x1 - x0);
-	uint8_t dy = abs(y1 - y0);
-    int sx = -1;
-    int sy = -1;
+static void draw_line(int8_t x0, int8_t y0, int8_t x1, int8_t y1) {
+    int8_t dx = abs(x1 - x0);
+	int8_t dy = abs(y1 - y0);
+    int8_t sx = -1;
+    int8_t sy = -1;
 	if (x0 < x1) {
-		sx = 1
+		sx = 1;
 	}
 	if (y0 < y1) {
-		sy = 1
+		sy = 1;
 	}
-	int err = dx - dy;
+	int8_t err = dx - dy;
 
     do {
         //img.Set(x0, y0, col)
-        int e2 = 2 * err;
+        int8_t e2 = 2 * err;
 		if (e2 > -dy) {
 			err -= dy;
 			x0 += sx;
@@ -316,16 +316,14 @@ static void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
 static void render_cube(void) {
     rotate_cube(M_PI / 4, atan(sqrt(2)));
     for (uint8_t frame = 0; frame < 360; frame++) {
-
         for (size_t i = 0; i < (sizeof(edges) / sizeof(edges[0])); i++) {
-
-			xy1 := nodes[edge[0]]
-			xy2 := nodes[edge[1]]
-			drawLine(int(xy1[0])+offset, int(xy1[1])+offset, int(xy2[0])+offset, int(xy2[1])+offset, img, fgCol)
+            uint8_t edge[2] = *edges[i];
+			int8_t xy1[2] = *nodes[edge[0]];
+			int8_t xy2[2] = *nodes[edge[1]];
+			draw_line(xy1[0], xy1[1], xy2[0], xy2[1]);
 		}
-		rotateCube(math.Pi/180, 0)
+		rotate_cube(M_PI/180, 0);
 	}
-    draw_line(0,0,0,0);
 }
 
 // Images credit j-inc(/James Incandenza) and pixelbenny. Credit to obosob for initial animation approach.
