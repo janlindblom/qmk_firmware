@@ -303,7 +303,7 @@ void render_kitty(void) { return; }
 #    endif
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (!is_keyboard_master()) {
+    if (is_keyboard_master()) {
         return OLED_ROTATION_270;
     }
     return rotation;
@@ -313,7 +313,7 @@ void oled_render_layer_state(void) {
     oled_write_P(PSTR("LAYER"), false);
     switch (get_highest_layer(layer_state | default_layer_state)) {
         case L_BASE:
-            oled_write_ln_P(PSTR("Base"), false);
+            oled_write_ln_P(PSTR("Base "), false);
             break;
         case L_LOWER:
             oled_write_ln_P(PSTR("Lower"), false);
@@ -329,10 +329,11 @@ void oled_render_layer_state(void) {
 
 void oled_render_keylock_state(uint8_t led_usb_state) {
     oled_write_P(PSTR("LOCK "), false);
+    oled_write_P(PSTR(" "), false);
     oled_write_P(PSTR("N"), led_usb_state & (1 << USB_LED_NUM_LOCK));
     oled_write_P(PSTR("C"), led_usb_state & (1 << USB_LED_CAPS_LOCK));
     oled_write_ln_P(PSTR("S"), led_usb_state & (1 << USB_LED_SCROLL_LOCK));
-    oled_write_P(PSTR("  "), false);
+    oled_write_P(PSTR(" \n"), false);
 }
 
 void oled_render_mod_state(uint8_t modifiers) {
@@ -341,7 +342,7 @@ void oled_render_mod_state(uint8_t modifiers) {
     oled_write_P(PSTR("C"), (modifiers & MOD_MASK_CTRL));
     oled_write_P(PSTR("A"), (modifiers & MOD_MASK_ALT));
     oled_write_P(PSTR("G"), (modifiers & MOD_MASK_GUI));
-    oled_write_P(PSTR(" "), false);
+    oled_write_P(PSTR(" \n"), false);
 }
 
 void oled_render_logo(void) {
@@ -357,7 +358,7 @@ void oled_task_user(void) {
     if (is_keyboard_master()) {
 #    ifdef WPM_ENABLE
         render_kitty();
-        oled_set_cursor(0, 4);
+        oled_set_cursor(0, 5);
 #    else
         static const char PROGMEM font_logo[11] = {0x80, 0x81, 0x82, 0x83, 0x84, 0x20, 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0x20, 0};
         oled_write_P(font_logo, false);
@@ -373,11 +374,11 @@ void oled_task_user(void) {
 #endif
 
 #ifdef RGBLIGHT_LAYERS
-const rgblight_segment_t PROGMEM base_layer[]     = RGBLIGHT_LAYER_SEGMENTS({0, 12, HSV_CYAN});
-const rgblight_segment_t PROGMEM symb_layer[]     = RGBLIGHT_LAYER_SEGMENTS({0, 12, HSV_PURPLE});
-const rgblight_segment_t PROGMEM num_layer[]      = RGBLIGHT_LAYER_SEGMENTS({0, 12, HSV_AZURE});
-const rgblight_segment_t PROGMEM adjust_layer[]   = RGBLIGHT_LAYER_SEGMENTS({0, 12, HSV_PINK});
-const rgblight_segment_t PROGMEM capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 12, HSV_RED});
+const rgblight_segment_t PROGMEM base_layer[]     = RGBLIGHT_LAYER_SEGMENTS({0, 54, HSV_CYAN});
+const rgblight_segment_t PROGMEM symb_layer[]     = RGBLIGHT_LAYER_SEGMENTS({0, 54, HSV_PURPLE});
+const rgblight_segment_t PROGMEM num_layer[]      = RGBLIGHT_LAYER_SEGMENTS({0, 54, HSV_AZURE});
+const rgblight_segment_t PROGMEM adjust_layer[]   = RGBLIGHT_LAYER_SEGMENTS({0, 54, HSV_PINK});
+const rgblight_segment_t PROGMEM capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 54, HSV_RED});
 
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(base_layer, symb_layer, num_layer, adjust_layer, capslock_layer);
 #endif
@@ -391,6 +392,7 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
 #ifdef RGBLIGHT_LAYERS
+    rgblight_set_layer_state(0, layer_state_cmp(state, L_BASE));
     rgblight_set_layer_state(1, layer_state_cmp(state, L_RAISE));
     rgblight_set_layer_state(2, layer_state_cmp(state, L_LOWER));
     rgblight_set_layer_state(3, layer_state_cmp(state, L_ADJUST));
