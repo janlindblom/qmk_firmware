@@ -14,7 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
-
 #include "keymap_nordic.h"
 
 enum layers {
@@ -248,25 +247,20 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 #endif
 
 #ifdef RGBLIGHT_LAYERS
-
 const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 6, HSV_RED},
-    {6, 6, HSV_RED}
+    {0, 35, HSV_RED}
 );
 
 const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 6, HSV_CYAN},
-    {6, 6, HSV_CYAN}
+    {0, 35, HSV_CYAN}
 );
 // Light LEDs 11 & 12 in purple when keyboard layer 2 is active
 const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 6, HSV_PURPLE},
-    {6, 6, HSV_PURPLE}
+    {0, 35, HSV_PURPLE}
 );
 // Light LEDs 13 & 14 in green when keyboard layer 3 is active
 const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 6, HSV_GREEN},
-    {6, 6, HSV_GREEN}
+    {0, 25, HSV_GREEN}
 );
 
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
