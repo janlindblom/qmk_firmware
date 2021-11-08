@@ -18,13 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+// Load Swedish keys and sendstring stuff.
 #include "keymap_swedish.h"
 #include "sendstring_swedish.h"
 
+// Namnlos layers.
 enum layer_names {
     L_BASE,
     L_LOWER,
     L_RAISE,
+    L_MOVE,
     L_ADJUST
 };
 
@@ -35,6 +38,7 @@ enum custom_keycodes {
     SK_GEQ,
 };
 
+#ifdef RGB_MATRIX_ENABLE
 typedef union {
     uint32_t raw;
     struct {
@@ -49,11 +53,10 @@ typedef union {
 } user_config_t;
 
 user_config_t user_config;
-static uint32_t oled_timer = 0;
-
-#ifdef RGB_MATRIX_ENABLE
-    static uint32_t hypno_timer;
+static uint32_t hypno_timer;
 #endif
+
+static uint32_t oled_timer = 0;
 
 // Combos, if enabled
 #ifdef COMBO_ENABLE
@@ -125,8 +128,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define CK_ESC LT(L_RAISE, KC_ESC)
 #define CK_BSPC MT(MOD_LCTL, KC_BSPC)
 #define CK_DEL MT(MOD_LGUI, KC_DEL)
-#define CK_ENT1 MT(MOD_LALT, KC_ENT)
-#define CK_SPC1 LT(L_LOWER, KC_SPC)
+#define CK_SPC1 MT(MOD_LALT, KC_SPC)
+#define CK_ENT1 LT(L_LOWER, KC_ENT)
 #define CK_ENT2 LT(L_LOWER, KC_ENT)
 #define CK_SPC2 LT(L_RAISE, KC_SPC)
 #define CK_TAB MT(MOD_RALT, KC_TAB)
@@ -157,7 +160,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       CK_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, CK_COMM,  CK_DOT, CK_DASH, CK_QUOT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                           CK_DEL, CK_ENT1, CK_SPC1,    CK_ENT2, CK_SPC2, CK_TAB
+                                           CK_DEL, CK_SPC1, CK_ENT1,    CK_SPC2, CK_ENT2, CK_TAB
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -185,7 +188,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                           KC_MENU, _______, KC_ENT,    KC_SPC, _______, _______
                                       //`--------------------------'  `--------------------------'
   ),
-
   [L_ADJUST] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
         RESET, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -303,7 +305,11 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (is_keyboard_master()) {
         return OLED_ROTATION_270;
     } else {
+#ifdef WPM_ENABLE
+        return OLED_ROTATION_270;
+#else
         return OLED_ROTATION_180;
+#endif
     }
     return rotation;
 }
@@ -373,6 +379,20 @@ void oled_render_logo(void) {
     oled_write_P(crkbd_logo, false);
 }
 
+void oled_render_logo_small(void) {
+    static const char PROGMEM corne_logo[] = {
+        // 'corne', 32x32px
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0x80, 0x00,
+        0x00, 0x00, 0xc0, 0xe0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xe0, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x80, 0xc0, 0xe0, 0xf0, 0x00, 0x00, 0xf0, 0xfc, 0xfe, 0xff, 0xff, 0xff, 0x01, 0xf0,
+        0xfc, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x1f, 0x07, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x3f, 0xff, 0xff, 0xff, 0xfe, 0xf0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf8, 0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xc1, 0x80, 0x80, 0x80, 0xc0, 0xf0, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x01, 0x03, 0x03, 0x03, 0x03, 0x01, 0x01, 0x03, 0x03, 0x07, 0x07, 0x07,
+        0x03, 0x03, 0x01, 0x03, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x03, 0x01, 0x00, 0x00, 0x00};
+        oled_write_raw_P(corne_logo, sizeof(corne_logo));
+}
+
 void oled_task_user(void) {
     if (timer_elapsed32(oled_timer) > OLED_TIMEOUT) {
         oled_off();
@@ -382,13 +402,8 @@ void oled_task_user(void) {
     }
 
     if (is_keyboard_master()) {
-#    ifdef WPM_ENABLE
-        render_kitty();
+        oled_render_logo_small();
         oled_set_cursor(0, 5);
-#    else
-        static const char PROGMEM font_logo[11] = {0x80, 0x81, 0x82, 0x83, 0x84, 0x20, 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0x20, 0};
-        oled_write_P(font_logo, false);
-#    endif
         oled_render_layer_state();
         oled_render_mod_state(get_mods());
         oled_render_keylock_state(host_keyboard_leds());
@@ -411,7 +426,12 @@ void oled_task_user(void) {
 #    endif
         oled_advance_page(true);
     } else {
+#    ifdef WPM_ENABLE
+        render_kitty();
+        oled_set_cursor(0, 5);
+#    else
         oled_render_logo();
+#    endif
 #    ifdef RGB_MATRIX_ENABLE
         if (user_config.rgb_matrix_idle_anim && rgb_matrix_get_mode() == user_config.rgb_matrix_idle_mode) {
             oled_scroll_left();  // Turns on scrolling
@@ -419,6 +439,7 @@ void oled_task_user(void) {
             oled_scroll_off();
         }
 #    endif
+        oled_advance_page(true);
     }
 }
 #endif
@@ -590,8 +611,8 @@ void keyboard_post_init_user(void) {
 #    endif
     rgblight_enable();
 #endif
-    user_config.raw = eeconfig_read_user();
 #ifdef RGB_MATRIX_ENABLE
+    user_config.raw = eeconfig_read_user();
     rgb_matrix_set_defaults();
     rgb_matrix_enable_noeeprom();
 #endif
@@ -600,9 +621,6 @@ void keyboard_post_init_user(void) {
 
 // Custom send_string keys
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    //static uint8_t saved_mods   = 0;
-    //uint16_t       temp_keycode = keycode;
-
 #ifdef OLED_ENABLE
     oled_timer = timer_read32();
 #endif

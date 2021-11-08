@@ -1,8 +1,9 @@
-/*
-This is the c configuration file for the keymap
+/**
+This is the c configuration file for the keymap.
 
 Copyright 2012 Jun Wako <wakojun@gmail.com>
 Copyright 2015 Jack Humbert
+Copyright 2021 Jan Lindblom <jan@namnlos.io>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,12 +56,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RGBLIGHT_DEFAULT_HUE 106
 #    define RGBLIGHT_SLEEP
 #    undef RGBLED_NUM
-#    define RGBLED_NUM 12  // Number of LEDs
+#    define RGBLED_NUM 54  // Number of LEDs
 #    undef DRIVER_LED_TOTAL
 #    define DRIVER_LED_TOTAL RGBLED_NUM
 #    undef RGBLED_SPLIT
 #    define RGBLED_SPLIT \
-        { 6, 6 }
+        {27, 27 }
 #    define RGBLIGHT_SPLIT
 #    define RGBLIGHT_HUE_STEP 8
 #    define RGBLIGHT_SAT_STEP 12
