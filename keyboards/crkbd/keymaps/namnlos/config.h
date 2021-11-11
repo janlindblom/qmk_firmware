@@ -47,6 +47,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define UNICODE_SELECTED_MODES UC_WINC
 #define IGNORE_MOD_TAP_INTERRUPT
 
+#ifdef WPM_ENABLE
+#    define SPLIT_WPM_ENABLE
+#    define SPLIT_OLED_ENABLE
+//#    define SPLIT_LAYER_STATE_ENABLE
+//#    define SPLIT_LED_STATE_ENABLE
+//#    define SPLIT_MODS_ENABLE
+#endif
+
 #ifdef RGBLIGHT_ENABLE
 #    define RGBLIGHT_LAYERS
 
@@ -95,9 +103,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RGB_MATRIX_SPD_STEP 10
 
 #    define DISABLE_RGB_MATRIX_ALPHAS_MODS
-#    define DISABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
+//#    define DISABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
 #    define DISABLE_RGB_MATRIX_GRADIENT_UP_DOWN
-//#    define DISABLE_RGB_MATRIX_BREATHING
+#    define DISABLE_RGB_MATRIX_BREATHING
 #    define DISABLE_RGB_MATRIX_BAND_SAT
 #    define DISABLE_RGB_MATRIX_BAND_VAL
 #    define DISABLE_RGB_MATRIX_BAND_PINWHEEL_SAT
@@ -119,13 +127,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define DISABLE_RGB_MATRIX_RAINDROPS
 #    define DISABLE_RGB_MATRIX_JELLYBEAN_RAINDROPS
 
-#    define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+//#    define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 #    define DISABLE_RGB_MATRIX_TYPING_HEATMAP
 #    define DISABLE_RGB_MATRIX_DIGITAL_RAIN
 
-#    define RGB_MATRIX_KEYPRESSES  // reacts to keypresses
+//#    define RGB_MATRIX_KEYPRESSES  // reacts to keypresses
 
-// #    define DISABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
+#    define DISABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
 #    define DISABLE_RGB_MATRIX_SOLID_REACTIVE
 #    define DISABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
 #    define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE

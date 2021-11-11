@@ -173,7 +173,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        SK_GEQ, SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD,                      SE_AMPR,  SE_EQL, _______, _______, SE_BSLS, CK_ENDASH,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          SE_LABK, SE_RABK,  KC_ENT,     KC_SPC, SE_DQUO,  KC_DEL
+                                          SE_LABK, SE_RABK,  KC_SPC,     KC_ENT, SE_DQUO,  KC_DEL
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -185,7 +185,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
         KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,  KC_F12,                      CK_WLFT, CK_WRGT, KC_HOME,  KC_END, KC_PGDN, KC_VOLD,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_MENU, _______, KC_ENT,    KC_SPC, _______, _______
+                                          KC_MENU, _______, KC_SPC,    KC_ENT, _______, _______
                                       //`--------------------------'  `--------------------------'
   ),
   [L_ADJUST] = LAYOUT_split_3x6_3(
@@ -427,8 +427,8 @@ void oled_task_user(void) {
         oled_advance_page(true);
     } else {
 #    ifdef WPM_ENABLE
+        oled_set_cursor(0, 11);
         render_kitty();
-        oled_set_cursor(0, 5);
 #    else
         oled_render_logo();
 #    endif
@@ -591,17 +591,21 @@ void eeconfig_init_user(void) {
     rgb_matrix_mode_noeeprom(user_config.rgb_matrix_active_mode);
     keyboard_init();
 }
+#endif
 
 void suspend_power_down_keymap(void) {
     oled_off();
+#ifdef RGB_MATRIX_ENABLE
     rgb_matrix_set_suspend_state(true);
+#endif
 }
 
 void suspend_wakeup_init_keymap(void) {
     oled_on();
+#ifdef RGB_MATRIX_ENABLE
     rgb_matrix_set_suspend_state(false);
-}
 #endif
+}
 
 void keyboard_post_init_user(void) {
 #ifdef RGBLIGHT_ENABLE
@@ -619,11 +623,11 @@ void keyboard_post_init_user(void) {
     return;
 }
 
-// Custom send_string keys
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
 #ifdef OLED_ENABLE
     oled_timer = timer_read32();
 #endif
+    // Custom send_string keys
     switch (keycode) {
         case SK_NOT_EQL:
             if (record->event.pressed) {
