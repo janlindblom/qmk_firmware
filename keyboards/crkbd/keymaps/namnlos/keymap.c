@@ -140,6 +140,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define CK_PSTE LCTL(KC_V)
 #define CK_WRGT C(KC_RGHT)
 #define CK_WLFT C(KC_LEFT)
+#define CK_ADJ MO(L_ADJUST)
 
 #ifdef UNICODE_ENABLE
 #    define EM_DASH 0x2014
@@ -173,7 +174,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        SK_GEQ, SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD,                      SE_AMPR,  SE_EQL, _______, _______, SE_BSLS, CK_ENDASH,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          SE_LABK, SE_RABK,  KC_SPC,     KC_ENT, SE_DQUO,  KC_DEL
+                                          SE_LABK, SE_RABK,  KC_SPC,     CK_ADJ, SE_DQUO,  KC_DEL
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -185,7 +186,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
         KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,  KC_F12,                      CK_WLFT, CK_WRGT, KC_HOME,  KC_END, KC_PGDN, KC_VOLD,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_MENU, _______, KC_SPC,    KC_ENT, _______, _______
+                                          KC_MENU, _______,  CK_ADJ,     KC_ENT, _______, _______
                                       //`--------------------------'  `--------------------------'
   ),
   [L_ADJUST] = LAYOUT_split_3x6_3(
@@ -196,7 +197,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
+                                          _______, _______, _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
   )
 };
@@ -214,7 +215,7 @@ bool wpm_keycode_user(uint16_t keycode) {
 // WPM-responsive animation stuff here
 #        define FRAMES 2
 #        define SLEEP_SPEED 10  // below this wpm value your animation will idle
-#        define KAKI_SPEED 40  // above this wpm value typing animation to triggere
+#        define KAKI_SPEED 30  // above this wpm value typing animation to triggere
 #        define ANIM_SIZE 128  // number of bytes in array, minimize for adequate firmware size, max is 1024
 
 uint32_t anim_timer          = 0;
@@ -394,26 +395,14 @@ void oled_render_logo_small(void) {
 }
 
 void oled_task_user(void) {
-/* #    ifdef OLED_TIMEOUT
-    if (timer_elapsed32(oled_timer) > OLED_TIMEOUT) {
-        oled_off();
-        return;
-    } else {
-        oled_on();
-    }
-#    endif */
-
     if (is_keyboard_master()) {
         oled_render_logo_small();
         oled_set_cursor(0, 5);
         oled_render_layer_state();
         oled_render_mod_state(get_mods());
         oled_render_keylock_state(host_keyboard_leds());
-
 #    ifdef RGB_MATRIX_ENABLE
         oled_write_P(PSTR("\n"), false);
-        oled_write_P(PSTR("\n"), false);
-
         if (rgb_matrix_config.enable) {
             if (user_config.rgb_matrix_idle_anim) {
                 oled_write_P(rgb_matrix_anim_oled_text(user_config.rgb_matrix_active_mode), false);
@@ -424,12 +413,20 @@ void oled_task_user(void) {
             }
         } else {
             oled_write_P(PSTR("\n"), false);
-            oled_write_P(PSTR("\n"), false);
         }
 #    endif
         oled_advance_page(true);
     } else {
 #    ifdef WPM_ENABLE
+        uint8_t n = get_current_wpm();
+        char    wpm_counter[4];
+        wpm_counter[3] = '\0';
+        wpm_counter[2] = '0' + n % 10;
+        wpm_counter[1] = (n /= 10) % 10 ? '0' + (n) % 10 : (n / 10) % 10 ? '0' : ' ';
+        wpm_counter[0] = n / 10 ? '0' + n / 10 : ' ';
+        oled_write_P(PSTR("WPM: "), false);
+        oled_write(wpm_counter, false);
+        oled_write_P(PSTR("\n"), false);
         oled_set_cursor(0, 11);
         render_kitty();
 #    else
@@ -442,7 +439,6 @@ void oled_task_user(void) {
             oled_scroll_off();
         }
 #    endif
-        oled_advance_page(true);
     }
 }
 #endif
