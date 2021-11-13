@@ -1,7 +1,6 @@
 OLED_ENABLE = yes
-OLED_DRIVER = SSD1306
 LOCAL_GLCDFONT = yes
-RGBLIGHT_ENABLE = yes   # Enable WS2812 RGB underlight.
+RGBLIGHT_ENABLE = no   # Enable WS2812 RGB underlight.
 RGB_MATRIX_ENABLE = no
 MOUSEKEY_ENABLE = no   # Mouse keys, needed for baller
 TAP_DANCE_ENABLE = yes  # Let's dance
@@ -17,7 +16,7 @@ SWAP_HANDS_ENABLE  = no   # Enable one-hand typing
 BACKLIGHT_ENABLE   = no   # Enable keyboard backlight functionality
 MIDI_ENABLE        = no   # MIDI controls
 AUDIO_ENABLE       = no   # Audio output on port C6
-SLEEP_LED_ENABLE   = no    # Breathing sleep LED during USB suspend
+SLEEP_LED_ENABLE   = yes  # Breathing sleep LED during USB suspend
 BOOTMAGIC_ENABLE = yes       # Enable Bootmagic Lite
 COMMAND_ENABLE     = yes   # Commands for debug and configuration
 

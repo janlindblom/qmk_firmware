@@ -130,8 +130,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define CK_DEL MT(MOD_LGUI, KC_DEL)
 #define CK_SPC1 MT(MOD_LALT, KC_SPC)
 #define CK_ENT1 LT(L_LOWER, KC_ENT)
-#define CK_ENT2 LT(L_LOWER, KC_ENT)
-#define CK_SPC2 LT(L_RAISE, KC_SPC)
+#define CK_ENT2 LT(L_RAISE, KC_ENT)
+#define CK_SPC2 LT(L_LOWER, KC_SPC)
 #define CK_TAB MT(MOD_RALT, KC_TAB)
 #define CK_ADIA MT(MOD_RCTL, SE_ADIA)
 #define CK_QUOT MT(MOD_RSFT, SE_QUOT)
@@ -380,7 +380,7 @@ void oled_render_logo(void) {
 }
 
 void oled_render_logo_small(void) {
-    static const char PROGMEM corne_logo[] = {
+    static const char corne_logo[] = {
         // 'corne', 32x32px
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0x80, 0x00,
         0x00, 0x00, 0xc0, 0xe0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xe0, 0x00, 0x00, 0x00, 0x00,
@@ -390,16 +390,18 @@ void oled_render_logo_small(void) {
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xc1, 0x80, 0x80, 0x80, 0xc0, 0xf0, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x01, 0x03, 0x03, 0x03, 0x03, 0x01, 0x01, 0x03, 0x03, 0x07, 0x07, 0x07,
         0x03, 0x03, 0x01, 0x03, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x03, 0x01, 0x00, 0x00, 0x00};
-        oled_write_raw_P(corne_logo, sizeof(corne_logo));
+        oled_write_raw(corne_logo, sizeof(corne_logo));
 }
 
 void oled_task_user(void) {
+/* #    ifdef OLED_TIMEOUT
     if (timer_elapsed32(oled_timer) > OLED_TIMEOUT) {
         oled_off();
         return;
     } else {
         oled_on();
     }
+#    endif */
 
     if (is_keyboard_master()) {
         oled_render_logo_small();
@@ -407,6 +409,7 @@ void oled_task_user(void) {
         oled_render_layer_state();
         oled_render_mod_state(get_mods());
         oled_render_keylock_state(host_keyboard_leds());
+
 #    ifdef RGB_MATRIX_ENABLE
         oled_write_P(PSTR("\n"), false);
         oled_write_P(PSTR("\n"), false);
@@ -594,14 +597,18 @@ void eeconfig_init_user(void) {
 #endif
 
 void suspend_power_down_keymap(void) {
+#ifdef OLED_ENABLE
     oled_off();
+#endif
 #ifdef RGB_MATRIX_ENABLE
     rgb_matrix_set_suspend_state(true);
 #endif
 }
 
 void suspend_wakeup_init_keymap(void) {
+#ifdef OLED_ENABLE
     oled_on();
+#endif
 #ifdef RGB_MATRIX_ENABLE
     rgb_matrix_set_suspend_state(false);
 #endif
