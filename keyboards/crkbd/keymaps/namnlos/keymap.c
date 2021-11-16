@@ -224,6 +224,80 @@ uint8_t  current_sleep_frame = 0;
 uint8_t  current_wake_frame  = 0;
 uint8_t  current_kaki_frame  = 0;
 
+void render_cube(void) {
+    uint8_t offset = 16;
+    int8_t nodes[8][3] = {
+        {-16, -16, -16},
+        {-16, -16, 16},
+        {-16, 16, -16},
+        {-16, 16, 16},
+        {16, -16, -16},
+        {16, -16, 16},
+        {16, 16, -16},
+        {16, 16, 16}};
+
+    uint8_t edges[12][2] = {
+        {0, 1}, {1, 3}, {3, 2},
+        {2, 0}, {4, 5}, {5, 7},
+        {7, 6}, {6, 4}, {0, 4},
+        {1, 5}, {2, 6}, {3, 7}};
+
+    void rotate_cube(float angleX, float angleY) {
+        float sinX = sin(angleX);
+        float cosX = cos(angleX);
+        float sinY = sin(angleY);
+        float cosY = cos(angleY);
+        for (size_t i = 0; i < (sizeof(nodes) / sizeof(nodes[0])); i++) {
+            int8_t x    = nodes[i][0];
+            int8_t y    = nodes[i][1];
+            int8_t z    = nodes[i][2];
+            nodes[i][0] = x * cosX - z * sinX;
+            nodes[i][2] = z * cosX + x * sinX;
+            z           = nodes[i][2];
+            nodes[i][1] = y * cosY - z * sinY;
+            nodes[i][2] = z * cosY + y * sinY;
+        }
+    }
+
+    void draw_line(int8_t x0, int8_t y0, int8_t x1, int8_t y1) {
+        uint8_t x = x0;
+        uint8_t y = y0;
+        uint8_t dx = abs(x1 - x0);
+        uint8_t dy = abs(y1 - y0);
+        int8_t  sx = -1;
+        int8_t  sy = -1;
+
+        if (x0 < x1) {
+            sx = 1;
+        }
+        if (y0 < y1) {
+            sy = 1;
+        }
+        int8_t err = dx - dy;
+        do {
+            oled_write_pixel(x, y, true);
+            int8_t e2 = 2 * err;
+            if (e2 > -1 * dy) {
+                err -= dy;
+                x += sx;
+            }
+            if (e2 < dx) {
+                err += dx;
+                y += sy;
+            }
+        } while (!(x == x1 && y == y1));
+    }
+
+    void render_frame(void) {
+        for (size_t i = 0; i < sizeof(edges) / sizeof(edges[0]); i++) {
+            draw_line(nodes[edges[i][0]][0]+offset, nodes[edges[i][0]][1]+offset, nodes[edges[i][1]][0]+offset, nodes[edges[i][1]][1]+offset);
+        }
+    }
+
+    rotate_cube(M_PI/4, atan(sqrt(2)));
+    render_frame();
+}
+
 // clang-format off
 void render_kitty(void) {
     // Images credit j-inc(/James Incandenza) and pixelbenny. Credit to obosob for initial animation approach.
@@ -417,7 +491,18 @@ void oled_task_user(void) {
 #    endif
         oled_advance_page(true);
     } else {
+#    ifdef OLED_TIMEOUT
+    if (timer_elapsed32(oled_timer) > OLED_TIMEOUT) {
+        oled_off();
+        return;
+    } else {
+        oled_on();
+    }
+#    endif
 #    ifdef WPM_ENABLE
+        oled_set_cursor(0, 8);
+        render_kitty();
+        oled_set_cursor(0, 13);
         uint8_t n = get_current_wpm();
         char    wpm_counter[4];
         wpm_counter[3] = '\0';
@@ -426,9 +511,6 @@ void oled_task_user(void) {
         wpm_counter[0] = n / 10 ? '0' + n / 10 : ' ';
         oled_write_P(PSTR("WPM: "), false);
         oled_write(wpm_counter, false);
-        oled_write_P(PSTR("\n"), false);
-        oled_set_cursor(0, 11);
-        render_kitty();
 #    else
         oled_render_logo();
 #    endif
