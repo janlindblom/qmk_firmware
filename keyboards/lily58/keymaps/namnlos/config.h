@@ -58,11 +58,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 */
 
+#ifdef WPM_ENABLE
+#    define SPLIT_WPM_ENABLE
+//#    define SPLIT_OLED_ENABLE
+//#    define SPLIT_LAYER_STATE_ENABLE
+//#    define SPLIT_LED_STATE_ENABLE
+//#    define SPLIT_MODS_ENABLE
+#endif
+
 #ifdef OLED_ENABLE
 #    undef OLED_BRIGHTNESS
 #    define OLED_BRIGHTNESS 128
 #endif
 
-#ifdef COMMAND_ENABLE
-#    define IS_COMMAND() (get_mods() == (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL)) || get_mods() == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)))
+
+#ifdef MOUSEKEY_ENABLE
+#    define MOUSEKEY_DELAY 0
+#    define MOUSEKEY_INTERVAL 16
+#    define MOUSEKEY_MAX_SPEED 6
+#    define MOUSEKEY_TIME_TO_MAX 36
+#    define MOUSEKEY_WHEEL_MAX_SPEED 4
+#    define MOUSEKEY_WHEEL_TIME_TO_MAX 100
 #endif
+
+/* key combination for command */
+#define IS_COMMAND() (get_mods() == (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL)) || get_mods() == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)))
