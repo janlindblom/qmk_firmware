@@ -29,7 +29,7 @@ enum layers {
 #define LMOD    OSL(_SYM_LMOD)
 #define RMOD    OSL(_NUM_RMOD)
 #define SPC_NAV LT(_NAV, KC_SPC)
-#define H_FN    LT(_FN, KC_H)
+#define L_FN    LT(_FN, KC_L)
 
 // one-shot mods
 #define LSFT_ OSM(MOD_LSFT)
@@ -48,21 +48,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MAIN] = LAYOUT(
                     KC_F, KC_M, KC_P, KC_V,         KC_SCLN,  KC_DOT, KC_SLSH, S(KC_QUOT),
         KC_Z, KC_R, KC_S, KC_N, KC_T, KC_B,         KC_COMM,  KC_A,   KC_E,    KC_C,       KC_I, KC_QUOT,
-              KC_X, KC_G, KC_L, KC_D, KC_K,         KC_MINUS, KC_U,   KC_O,    KC_W,       KC_Y,
-                                LMOD, SPC_NAV,      H_FN,     RMOD
+              KC_X, KC_G, KC_H, KC_D, KC_K,         KC_MINUS, KC_U,   KC_O,    KC_W,       KC_Y,
+                                LMOD, SPC_NAV,      L_FN,     RMOD
     ),
 
     [_SYM_LMOD] = LAYOUT(
-                              C(S(KC_TAB)), C(KC_TAB), KC_CAPS, KC_NO,        S(KC_GRV),  S(KC_LBRC), S(KC_RBRC), S(KC_3),
-          KC_NO, A(KC_LEFT),  LALT_,        LCTL_,     LSFT_,   KC_PSCR,      S(KC_COMM), S(KC_9),    S(KC_0),    S(KC_DOT), KC_BSLS, S(KC_1),
-                 A(KC_RIGHT), C(KC_W),      C(KC_Q),   LGUI_,   KC_NO,        KC_GRAVE,   KC_LBRC,    KC_RBRC,    S(KC_2),   S(KC_5),
-                                                       KC_NO,   KC_NO,        KC_BSPC,    KC_ENTER
+                            C(S(KC_TAB)), C(KC_TAB), KC_CAPS, KC_NO,        S(KC_GRV),  S(KC_LBRC), S(KC_RBRC), S(KC_3),
+        KC_NO, A(KC_LEFT),  LALT_,        LCTL_,     LSFT_,   KC_PSCR,      S(KC_COMM), S(KC_9),    S(KC_0),    S(KC_DOT), KC_BSLS, S(KC_1),
+               A(KC_RIGHT), C(KC_W),      C(KC_Q),   LGUI_,   KC_NO,        KC_GRAVE,   KC_LBRC,    KC_RBRC,    S(KC_2),   S(KC_5),
+                                                     KC_NO,   KC_NO,        KC_BSPC,    KC_ENTER
     ),
 
     [_NUM_RMOD] = LAYOUT(
                              KC_7,  KC_8,  KC_9,   S(KC_8),        KC_NO, KC_CAPS, KC_NO, KC_NO,
-             KC_NO, S(KC_6), KC_1,  KC_2,  KC_3,   KC_EQL,         KC_NO, RSFT_,   RCTL_, RALT_,   KC_NO, KC_NO,
-                    S(KC_4), KC_4,  KC_5,  KC_6,   S(KC_EQL),      KC_NO, RGUI_,   RSG_,  C(KC_C), KC_NO,
+        S(KC_SLSH), S(KC_4), KC_1,  KC_2,  KC_3,   KC_EQL,         KC_NO, RSFT_,   RCTL_, RALT_,   KC_NO, KC_NO,
+                    S(KC_6), KC_4,  KC_5,  KC_6,   S(KC_EQL),      KC_NO, RGUI_,   RSG_,  C(KC_C), KC_NO,
                                            KC_DOT, KC_0,           KC_NO, KC_NO
     ),
 
@@ -82,30 +82,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 enum combos {
-    FM_J,
+    MV_J,
     MP_Q,
     GL_ESCAPE,
     LD_TAB,
 };
 
-const uint16_t PROGMEM j_combo[] = {KC_F, KC_M, COMBO_END};
+const uint16_t PROGMEM j_combo[] = {KC_M, KC_V, COMBO_END};
 const uint16_t PROGMEM q_combo[] = {KC_M, KC_P, COMBO_END};
-const uint16_t PROGMEM escape_combo[] = {KC_G, KC_L, COMBO_END};
-const uint16_t PROGMEM tab_combo[] = {KC_L, KC_D, COMBO_END};
+const uint16_t PROGMEM escape_combo[] = {KC_G, KC_H, COMBO_END};
+const uint16_t PROGMEM tab_combo[] = {KC_H, KC_D, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
-    [FM_J]       = COMBO(j_combo, KC_J),
+    [MV_J]       = COMBO(j_combo, KC_J),
     [MP_Q]       = COMBO(q_combo, KC_Q),
     [GL_ESCAPE]  = COMBO(escape_combo, KC_ESC),
     [LD_TAB]     = COMBO(tab_combo, KC_TAB),
 };
 
-const key_override_t question_mark_override = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, S(KC_1));
-const key_override_t ampersand_override = ko_make_basic(MOD_MASK_SHIFT, KC_SLSH, S(KC_7));
-const key_override_t pipe_override = ko_make_basic(MOD_MASK_SHIFT, KC_QUOT, S(KC_BSLS));
+const key_override_t ampersand_override = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, S(KC_7));
+const key_override_t pipe_override = ko_make_basic(MOD_MASK_SHIFT, KC_COMM, S(KC_BSLS));
 
 const key_override_t **key_overrides = (const key_override_t *[]){
-    &question_mark_override,
     &ampersand_override,
     &pipe_override,
     NULL
