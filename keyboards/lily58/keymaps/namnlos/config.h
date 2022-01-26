@@ -27,15 +27,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 // #define EE_HANDS
 
-#define TAPPING_FORCE_HOLD
-#define TAPPING_TERM 100
+#undef DEBOUNCE
+#define DEBOUNCE 8
+
+// Tapping
+#define PERMISSIVE_HOLD
+#define TAPPING_TERM 200
+
+#define SPLIT_OLED_ENABLE
 
 #define LAYER_STATE_8BIT
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION
 #define NO_ACTION_ONESHOT
 //#define COMBO_COUNT 3  // Enable if using combos.
-#define UNICODE_SELECTED_MODES UC_WINC
+// Unicode
+#define UNICODE_CYCLE_PERSIST  false
+#define UNICODE_SELECTED_MODES UC_MAC, UC_WINC, UC_WIN
 #define IGNORE_MOD_TAP_INTERRUPT
 
 #ifdef RGBLIGHT_ENABLE
@@ -71,7 +79,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define OLED_BRIGHTNESS 128
 #endif
 
-
 #ifdef MOUSEKEY_ENABLE
 #    define MOUSEKEY_DELAY 0
 #    define MOUSEKEY_INTERVAL 16
@@ -83,3 +90,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* key combination for command */
 #define IS_COMMAND() (get_mods() == (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL)) || get_mods() == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)))
+
+#ifdef OLED_FONT_H
+#    undef OLED_FONT_H
+#    define OLED_FONT_H "glcdfont_lily_namnlos.c"
+#endif
