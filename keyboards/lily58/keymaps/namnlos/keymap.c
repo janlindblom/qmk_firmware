@@ -17,6 +17,16 @@
 #include QMK_KEYBOARD_H
 #include "keymap_swedish_pro_osx_iso.h"
 
+//#define IS_MAC() (keymap_config.swap_lctl_lgui == true)
+
+enum custom_keycodes {
+    CC_LOSB = SAFE_RANGE,
+    CC_TAB,
+    CC_WLFT,
+    CC_WRGT,
+    CC_CLER,
+};
+
 // Tap Dance definitions
 #ifdef TAP_DANCE_ENABLE
 enum dances {
@@ -42,14 +52,15 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define CK_SPC1 LT(2, KC_SPC)
 #define CK_ENT2 LT(1, KC_ENT)
 #define CK_SPC2 LT(2, KC_SPC)
-#define CK_TAB MT(MOD_RALT, KC_TAB)
+#define CK_TAB MT(MOD_LALT, KC_TAB)
+#define CK_ARNG MT(MOD_RALT, SE_ARNG)
 #define CK_ADIA MT(MOD_RGUI, SE_ADIA)
 #define CK_QUOT MT(MOD_RSFT, SE_QUOT)
 #define CK_WRGT LOPT(KC_RGHT)
 #define CK_WLFT LOPT(KC_LEFT)
 
+// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
 /* QWERTY
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * | ESC  |   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |  +   |
@@ -67,10 +78,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
  [0] = LAYOUT(
   CK_ESC1,  KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    SE_PLUS,
-  KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    SE_ARNG,
+  CK_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    CK_ARNG,
   CK_BSPC,  KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                    KC_H,    KC_J,    KC_K,    KC_L,    SE_ODIA, CK_ADIA,
   CK_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, SE_LABK,  SE_DIAE, KC_N,    KC_M,    KC_COMM, KC_DOT,  SE_MINS, CK_QUOT,
-                          CK_DEL1, KC_LCMD, CK_ENT1, CK_SPC1,  CK_ENT2, CK_SPC2, CK_ESC2, CK_DEL2
+                          CK_DEL1, CC_LOSB, CK_ENT1, CK_SPC1,  CK_ENT2, CK_SPC2, CK_ESC2, CK_DEL2
 ),
 /* LOWER
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -79,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |  ´   |  •   |  Ω   |  É   |  ®   |  †   |                    |  µ   |  Ü   |  ı   |  Œ   |  π   |  ˙   |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |  ≥   | Apple|  ß   |  ∂   |  ƒ   |  ¸   |-------.    ,-------|  ˛   |  √   |  ª   |  ﬁ  |  Ø   |  Æ   |
- * |------+------+------+------+------+------|   >   |    |   ~   |------+------+------+------+------+------|
+ * |------+------+------+------+------+------|   ´   |    |   ~   |------+------+------+------+------+------|
  * |  ≤   |  ÷   |      |  Ç   |  ‹   |  ›   |-------|    |-------|  ‘   |  ’   |  ‚   |  …   |  –   |  ™   |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   |      |      |      | /       /       \      \  |      |      | BkSp |
@@ -90,14 +101,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   SE_SECT, SE_COPY,   SE_AT,  SE_PND,  SE_DLR, SE_INFN,                   _______, SE_PIPE, SE_LBRC, SE_RBRC, SE_AEQL, SE_PLMN,
   SE_ACUT, SE_BULT, SE_OMEG, SE_EACU, SE_REGD, SE_DAGG,                   SE_MICR, SE_UDIA, SE_DLSI,   SE_OE,   SE_PI, SE_DOTA,
   SE_GTEQ, SE_APPL,   SE_SS, SE_PDIF, SE_FHK,  SE_CEDL,                   SE_OGON, SE_SQRT, SE_FORD,   SE_FI, SE_OSTR, SE_AE,
-  SE_LTEQ,  SE_DIV, _______, SE_CCED, SE_LSAQ, SE_RSAQ, SE_RABK, SE_TILD, SE_LSQU, SE_RSQU, SE_SLQU, SE_ELLP, SE_NDSH, SE_TM,
+  SE_LTEQ,  SE_DIV, _______, SE_CCED, SE_LSAQ, SE_RSAQ, SE_ACUT, SE_TILD, SE_LSQU, SE_RSQU, SE_SLQU, SE_ELLP, SE_NDSH, SE_TM,
                              _______, _______, _______, _______, _______, _______, _______, KC_BSPC
 ),
 /* RAISE
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |                    |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |      |      |      | Mute |      |                    | Home | PgUp |  ↑   | PgDn | End  | PrScr|
+ * |      |      |      |      | Mute |      |                    | Home | PgUp |  ↑   | PgDn | End  |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |Power |      | Stop | Play | VolUp| BriUp|-------.    ,-------| <==  |  ←   |  ↓   |  →   | ==>  |      |
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
@@ -109,7 +120,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [2] = LAYOUT(
   KC_F1,     KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,  KC_F12,
-  _______, _______, _______, _______, KC_MUTE, _______,                   KC_HOME, KC_PGUP,   KC_UP, KC_PGDN,  KC_END, KC_PSCR,
+  _______, _______, _______, _______, KC_MUTE, _______,                   KC_HOME, KC_PGUP,   KC_UP, KC_PGDN,  KC_END, _______,
    KC_PWR, _______, KC_MSTP, KC_MPLY, KC_VOLU, KC_BRIU,                   CK_WLFT, KC_LEFT, KC_DOWN, KC_RGHT, CK_WRGT, _______,
   KC_SLEP, _______, KC_MPRV, KC_MNXT, KC_VOLD, KC_BRID, _______, _______, _______, _______, _______, _______, _______, _______,
                              _______, _______, _______, _______, _______, _______, _______, _______
@@ -118,11 +129,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |      |      |      |RESET |      |                    |      |      |      |      |      |      |
+ * |      |  Win |      |      |RESET |System|                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      |      |      |      |      |      |-------.    ,-------|      |      |      |      |      |      |
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
- * |      |      |      |      |      |      |-------|    |-------|      |      |      |      |      |      |
+ * |      |      |      |      |      |      |-------|    |-------| NKRO |  Mac |      |      |      |      |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   |      |      |      | /       /       \      \  |      |      |      |
  *                   |      |      |      |/       /         \      \ |      |      |      |
@@ -130,32 +141,58 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
   [3] = LAYOUT(
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RESET,   XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  XXXXXXX, CG_NORM, XXXXXXX, XXXXXXX, RESET,   CG_TOGG,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  XXXXXXX, AG_NORM, XXXXXXX, XXXXXXX, XXXXXXX, AG_TOGG,                   XXXXXXX, AG_SWAP, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  XXXXXXX, XXXXXXX, XXXXXXX, CC_CLER, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, NK_TOGG, CG_SWAP, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                              _______, _______, _______, _______, _______,  _______, _______, _______
   )
 };
+// clang-format on
 
 layer_state_t layer_state_set_user(layer_state_t state) { return update_tri_layer_state(state, 1, 2, 3); }
 
 #ifdef OLED_ENABLE
-#    define KEYLOG_LEN 6
+#    define KEYLOG_LEN 10
 char     keylog_str[KEYLOG_LEN] = {};
 uint16_t log_timer              = 0;
+uint32_t screen_timer           = 0;
 
-// from /users/drashna/oled/oled_stuff.c
-const char code_to_name[60] = {' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 20, 19, 15, 29, '_', '+', '=', 157, ']', '\\', '\'', 159, 158, 21, ',', '.', '-', ' ', ' ', ' '};
+// clang-format off
+const char code_to_name[256] = {
+//   0    1    2    3    4    5    6    7    8    9    A    B    c    D    E    F
+    ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',  // 0x
+    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2',  // 1x
+    '3', '4', '5', '6', '7', '8', '9', '0',  20,  19,  15,  29, '_', '+', '=', 157,  // 2x
+     96,  39,'\'', 159, 158,  21, ',', '.', '-', 190,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,  // 3x
+    0xDB,0xDC,0xDD,0xDE,0XDF,  0, 'P',  23,  19, 127,  17,  30,  16,  16,  31,  26,  // 4x
+     27,  25,  24, 'N', '/', '*', '-', '+',  23, '1', '2', '3', '4', '5', '6', '7',  // 5x
+    '8', '9', '0', '.','\\', 'A',   0, '=', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 6x
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 7x
+     14,  13, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 8x
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 9x
+    ' ', ' ', ' ', ' ', ' ',   0, ' ', ' ', ' ',  14,  13,  16,  17, ' ', ' ', ' ',  // Ax
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // Bx
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // Cx
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // Dx
+     15, 190, 191, 189,  15, 190, 191, 189, ' ', ' ', ' ', ' ', ' ',  24,  26,  24,  // Ex
+     25,0x02,0x02,0x02,0x02,0x02,0x02,0x02,0x02,  24,  25,  27,  26, ' ', ' ', ' '   // Fx
+};
+// clang-format on
 
-void add_keylog(uint16_t keycode) {
-    if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) {
-        keycode = keycode & 0xFF;
+void add_keylog(uint16_t keycode, keyrecord_t *record) {
+    if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX) || (keycode >= QK_MODS && keycode <= QK_MODS_MAX)) {
+        if ((record != NULL) && (record->tap.count)) {
+            keycode &= 0xFF;
+        }
+    }
+    if (keycode > 0xFF) {
+        return;
     }
 
     for (uint8_t i = KEYLOG_LEN - 1; i > 0; i--) {
         keylog_str[i] = keylog_str[i - 1];
     }
-    if (keycode < 60) {
+    if (keycode < (sizeof(code_to_name) / sizeof(char))) {
         keylog_str[0] = code_to_name[keycode];
     }
     keylog_str[KEYLOG_LEN - 1] = 0;
@@ -164,7 +201,7 @@ void add_keylog(uint16_t keycode) {
 
 void update_log(void) {
     if (timer_elapsed(log_timer) > 750) {
-        add_keylog(0);
+        add_keylog(0, NULL);
     }
 }
 
@@ -183,7 +220,8 @@ uint8_t  current_kaki_frame  = 0;
 
 // clang-format off
 void render_kitty(void) {
-    // Images credit j-inc(/James Incandenza) and pixelbenny. Credit to obosob for initial animation approach.
+    // Images credit j-inc(/James Incandenza) and pixelbenny.
+    // Credit to obosob for initial animation approach.
     static const char PROGMEM sleep[FRAMES][ANIM_SIZE] = {{
                                                                     // 'sleep1', 32x32px
                                                                     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x08, 0xa8, 0x48, 0xa8, 0x18, 0x08, 0x00, 0x00, 0x00, 0x80, 0x80, 0x80, 0x80, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -295,7 +333,6 @@ void oled_render_keylock_state(led_t led_state) {
     oled_write_P(PSTR("N"), led_state.num_lock);
     oled_write_P(PSTR("C"), led_state.caps_lock);
     oled_write_ln_P(PSTR("S"), led_state.scroll_lock);
-    oled_write_P(PSTR("\n"), false);
 }
 
 void oled_render_mod_state(uint8_t modifiers) {
@@ -307,8 +344,30 @@ void oled_render_mod_state(uint8_t modifiers) {
     oled_write_P(PSTR("\n"), false);
 }
 
+char mode_icon[24];
+
+char *read_mode_icon(bool swap, bool nkro) {
+    // clang-format off
+    static char logo[][4][3] = {
+        {{0x95, 0x96, 0}, {0xb5, 0xb6, 0}}, {{0x97, 0x98, 0}, {0xb7, 0xb8, 0}},
+        {{0x4E, 0x4B, 0}, {0x52, 0x4F, 0}}, {{0x20, 0x20, 0}, {0x20, 0x20, 0}}};
+    // clang-format on
+    uint8_t     swap_index   = 0;
+    uint8_t     nkro_index   = 3;
+    if (swap) {
+        swap_index = 1;
+    }
+    if (nkro) {
+        nkro_index = 2;
+    }
+    snprintf(mode_icon, sizeof(mode_icon), "%s %s%s %s", logo[swap_index][0], logo[nkro_index][0], logo[swap_index][1], logo[nkro_index][1]);
+
+    return mode_icon;
+}
+
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
+        extern keymap_config_t keymap_config;
         update_log();
 #    ifdef WPM_ENABLE
         render_kitty();
@@ -318,7 +377,7 @@ bool oled_task_user(void) {
         oled_render_mod_state(get_mods());
         oled_write_P(PSTR("\n"), false);
         oled_render_keylock_state(host_keyboard_led_state());
-        oled_write_P(PSTR("\n"), false);
+        oled_write(read_mode_icon(keymap_config.swap_lctl_lgui, keymap_config.nkro), false);
         render_keylogger_status();
         oled_advance_page(true);
     } else {
@@ -329,10 +388,69 @@ bool oled_task_user(void) {
 #endif  // OLED_ENABLE
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    extern keymap_config_t keymap_config;
     if (record->event.pressed) {
 #ifdef OLED_ENABLE
-        add_keylog(keycode);
+        add_keylog(keycode, record);
 #endif
     }
+
+    switch (keycode) {
+        case CC_CLER:
+            clear_keyboard();
+            return false;
+        case CC_LOSB:
+            if (record->event.pressed) {
+                if (keymap_config.swap_lctl_lgui == true) {
+                    register_code(KC_LALT);
+                } else {
+                    register_code(KC_LCMD);
+                }
+            } else {
+                if (keymap_config.swap_lctl_lgui == true) {
+                    unregister_code(KC_LALT);
+                } else {
+                    unregister_code(KC_LCMD);
+                }
+            }
+            return false;
+        case CC_WLFT:
+            if (record->event.pressed) {
+                if (keymap_config.swap_lctl_lgui == true) {
+                    add_mods(MOD_LALT);
+                } else {
+                    add_mods(MOD_LCTL);
+                }
+                register_code(KC_LEFT);
+            } else {
+                if (keymap_config.swap_lctl_lgui == true) {
+                    del_mods(MOD_LALT);
+                } else {
+                    del_mods(MOD_LCTL);
+                }
+                unregister_code(KC_LEFT);
+            }
+            return false;
+        case CC_WRGT:
+            if (record->event.pressed) {
+                if (keymap_config.swap_lctl_lgui == true) {
+                    add_mods(MOD_LALT);
+                } else {
+                    add_mods(MOD_LCTL);
+                }
+                register_code(KC_RGHT);
+            } else {
+                if (keymap_config.swap_lctl_lgui == true) {
+                    del_mods(MOD_LALT);
+                } else {
+                    del_mods(MOD_LCTL);
+                }
+                unregister_code(KC_RGHT);
+            }
+            return false;
+        default:
+            break;
+    }
+
     return true;
 }

@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PERMISSIVE_HOLD
 #define TAPPING_TERM 200
 
-#define SPLIT_OLED_ENABLE
-
 #define LAYER_STATE_8BIT
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION
@@ -68,15 +66,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef WPM_ENABLE
 #    define SPLIT_WPM_ENABLE
-//#    define SPLIT_OLED_ENABLE
 //#    define SPLIT_LAYER_STATE_ENABLE
 //#    define SPLIT_LED_STATE_ENABLE
 //#    define SPLIT_MODS_ENABLE
 #endif
 
 #ifdef OLED_ENABLE
-#    undef OLED_BRIGHTNESS
-#    define OLED_BRIGHTNESS 128
+#    ifdef OLED_BRIGHTNESSS
+#        undef OLED_BRIGHTNESS
+#    endif
+#    ifdef OLED_FONT_H
+#        undef OLED_FONT_H
+#    endif
+#    define OLED_FADE_OUT
+#    define OLED_FADE_OUT_INTERVAL 5
+#    define SPLIT_OLED_ENABLE
+#    define OLED_BRIGHTNESS 200
+#    define OLED_FONT_H "glcdfont_lily_namnlos.c"
 #endif
 
 #ifdef MOUSEKEY_ENABLE
@@ -90,8 +96,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* key combination for command */
 #define IS_COMMAND() (get_mods() == (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL)) || get_mods() == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)))
-
-#ifdef OLED_FONT_H
-#    undef OLED_FONT_H
-#    define OLED_FONT_H "glcdfont_lily_namnlos.c"
-#endif
