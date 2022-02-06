@@ -40,14 +40,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NO_ACTION_ONESHOT
 //#define COMBO_COUNT 3  // Enable if using combos.
 // Unicode
-#define UNICODE_CYCLE_PERSIST  false
+#define UNICODE_CYCLE_PERSIST false
 #define UNICODE_SELECTED_MODES UC_MAC, UC_WINC, UC_WIN
 #define IGNORE_MOD_TAP_INTERRUPT
 
 #ifdef RGBLIGHT_ENABLE
 #    undef RGBLED_NUM
-#    define RGBLIGHT_ANIMATIONS
 #    define RGBLED_NUM 27
+#    define RGBLIGHT_ANIMATIONS
 #    define RGBLIGHT_LIMIT_VAL 120
 #    define RGBLIGHT_HUE_STEP 10
 #    define RGBLIGHT_SAT_STEP 17
@@ -72,17 +72,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef OLED_ENABLE
+#    define SPLIT_OLED_ENABLE
 #    ifdef OLED_BRIGHTNESSS
 #        undef OLED_BRIGHTNESS
 #    endif
 #    ifdef OLED_FONT_H
 #        undef OLED_FONT_H
 #    endif
-#    define OLED_FADE_OUT
-#    define OLED_FADE_OUT_INTERVAL 5
-#    define SPLIT_OLED_ENABLE
-#    define OLED_BRIGHTNESS 200
 #    define OLED_FONT_H "glcdfont_lily_namnlos.c"
+#    ifndef OLED_FADE_OUT
+#        define OLED_FADE_OUT
+#    endif
+#    define OLED_FADE_OUT_INTERVAL 5
+#    define OLED_BRIGHTNESS 200
+
+#    ifdef WPM_ENABLE
+#        ifndef OLED_WPM_GRAPH_MAX_WPM
+#            define OLED_WPM_GRAPH_MAX_WPM 150
+#        endif
+#        ifndef OLED_WPM_GRAPH_REFRESH_INTERVAL
+#            define OLED_WPM_GRAPH_REFRESH_INTERVAL 500
+#        endif
+#        ifndef OLED_WPM_GRAPH_AREA_FILL_INTERVAL
+#            define OLED_WPM_GRAPH_AREA_FILL_INTERVAL 2
+#        endif
+#define OLED_WPM_GRAPH_VERTICAL_LINE
+#        ifndef OLED_WPM_GRAPH_VERTCAL_LINE_INTERVAL
+#            define OLED_WPM_GRAPH_VERTCAL_LINE_INTERVAL 10
+#        endif
+#        ifndef OLED_WPM_GRAPH_GRAPH_LINE_THICKNESS
+#            define OLED_WPM_GRAPH_GRAPH_LINE_THICKNESS 2
+#        endif
+#    endif
 #endif
 
 #ifdef MOUSEKEY_ENABLE
