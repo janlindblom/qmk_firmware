@@ -10,15 +10,28 @@
         "**/*.uf2": true
     },
     "files.associations": {
-        "*.h": "c",
-        "*.c": "c",
+        "*.cps": "javascript",
+        "*.arb": "json",
+        "*.jsonschema": "jsonc",
+        "Cakefile": "coffeescript",
+        "*.fdm_material": "xml",
+        "LICENSE": "plaintext",
+        "CHANGELOG": "markdown",
+        "*.nas": "nasm",
         "*.inc": "c",
+        "*.S": "avr",
+        ".s": "arm",
+        "*.asm": "nasm",
+        "*.ngloss": "rtf",
+        "*.c": "c",
         "*.cpp": "cpp",
         "*.hpp": "cpp",
         "xstddef": "c",
         "type_traits": "c",
         "utility": "c",
-        "ranges": "c"
+        "ranges": "c",
+        "ratio": "c",
+        "regex": "c"
     },
     "[markdown]": {
         "editor.trimAutoWhitespace": false,

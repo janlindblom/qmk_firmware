@@ -1,0 +1,8 @@
+# Bootloader selection
+BOOTLOADER = caterina
+
+BACKLIGHT_ENABLE = no
+RGBLIGHT_ENABLE = no
+MOUSEKEY_ENABLE = no
+COMMAND_ENABLE = no
+MOUSEKEY_ENABLE = no
