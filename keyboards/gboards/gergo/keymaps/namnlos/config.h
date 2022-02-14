@@ -1,4 +1,5 @@
-/* Copyright © 2022 Jan Lindblom (@janlindblom)
+/*
+ * Copyright © 2022 Jan Lindblom (@janlindblom)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,28 +16,10 @@
  */
 #pragma once
 
-#undef BACKLIGHT_LIMIT_VAL
-#define BACKLIGHT_LIMIT_VAL 200
-#undef BACKLIGHT_LEVELS
-#define BACKLIGHT_LEVELS 20
-#define BACKLIGHT_DEFAULT_LEVEL 7
-#define BACKLIGHT_BREATHING
-// Change this to 1 or remove the two lines if using the recommended transistor.
-#undef BACKLIGHT_ON_STATE
-#define BACKLIGHT_ON_STATE 0
-
-
 #undef DEBOUNCE
 #define DEBOUNCE 15
 
-#define COMBO_COUNT 3
+// #define COMBO_COUNT 3  // Enable if using combos.
 
-#define QUICK_TAP_TERM 200
-#define TAPPING_TERM 200
-
-/* Bootmagic Lite key configuration */
-#define BOOTMAGIC_LITE_ROW 0
-#define BOOTMAGIC_LITE_COLUMN 0
-
-/* key combination for command */
-#define IS_COMMAND() (get_mods() == (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL)) || get_mods() == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)))
+#undef OLED_BRIGHTNESS
+#define OLED_BRIGHTNESS 120

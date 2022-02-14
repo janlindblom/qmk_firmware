@@ -13,30 +13,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #pragma once
-
-#undef BACKLIGHT_LIMIT_VAL
-#define BACKLIGHT_LIMIT_VAL 200
-#undef BACKLIGHT_LEVELS
-#define BACKLIGHT_LEVELS 20
-#define BACKLIGHT_DEFAULT_LEVEL 7
-#define BACKLIGHT_BREATHING
-// Change this to 1 or remove the two lines if using the recommended transistor.
-#undef BACKLIGHT_ON_STATE
-#define BACKLIGHT_ON_STATE 0
-
 
 #undef DEBOUNCE
 #define DEBOUNCE 15
-
-#define COMBO_COUNT 3
-
-#define QUICK_TAP_TERM 200
 #define TAPPING_TERM 200
 
-/* Bootmagic Lite key configuration */
-#define BOOTMAGIC_LITE_ROW 0
-#define BOOTMAGIC_LITE_COLUMN 0
+#ifdef COMBO_COUNT
+#    undef COMBO_COUNT
+#endif
+#ifdef COMBO_TERM
+#    undef COMBO_TERM
+#endif
 
-/* key combination for command */
-#define IS_COMMAND() (get_mods() == (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL)) || get_mods() == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)))
