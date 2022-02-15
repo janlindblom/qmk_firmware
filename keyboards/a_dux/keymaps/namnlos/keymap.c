@@ -1,51 +1,94 @@
-// Copyright 2022 @janlindblom
-// SPDX-License-Identifier: GPL-2.0+
-
+/*
+ * Copyright 2022 Jan Lindblom (@janlindblom)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include QMK_KEYBOARD_H
 #include "keymap_swedish.h"
 
-// Seniply layout
-// https://stevep99.github.io/seniply
+enum layers {
+    BASE,    // default layer
+    SYMB,    // symbols
+    NUMB,    // numbers etc
+    SYST,
+    ADJUST,  // motion
+};
+
+enum tap_dances {
+  TD_Q_ESC
+};
+
+#ifdef TAP_DANCE_ENABLE
+// Tap Dance Definitions
+qk_tap_dance_action_t tap_dance_actions[] = {
+    // Tap once for Q, twice for ESC
+    [TD_Q_ESC] = ACTION_TAP_DANCE_DOUBLE(KC_Q, KC_ESC)
+};
+#endif
+
+#define CK_ENT LT(SYMB, KC_ENT)
+#define CK_SPC LT(NUMB, KC_SPC)
+#define CK_BSPC LT(NUMB, KC_BSPC)
+#define CK_TAB LT(SYMB, KC_TAB)
+#define CK_WRGT C(KC_RGHT)
+#define CK_WLFT C(KC_LEFT)
+#define CK_Q TD(TD_Q_ESC)
+#define CK_SYST MO(SYST)
+
+// Homerow mods
+#define CK_A LGUI_T(KC_A)
+#define CK_S LALT_T(KC_S)
+#define CK_D LCTL_T(KC_D)
+#define CK_F LSFT_T(KC_F)
+#define CK_J LSFT_T(KC_J)
+#define CK_K LCTL_T(KC_K)
+#define CK_L LALT_T(KC_L)
+#define CK_QOUT LGUI_T(SE_QUOT)
+#define CK_X ALGR_T(KC_X)
+#define CK_DOT ALGR_T(SE_DOT)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT_split_3x5_2(
-    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,    KC_L,    SE_ODIA,
-    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    SE_COMM, SE_DOT,  SE_MINS,
-                          LT(3,KC_TAB), KC_LSFT,     KC_SPC,  LT(1,KC_ENT)
+    [BASE] = LAYOUT_split_3x5_2(
+    CK_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    CK_A,    CK_S,    CK_D,    CK_F,    KC_G,        KC_H,    CK_J,    CK_K,    CK_L,    CK_QOUT,
+    KC_Z,    CK_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    SE_COMM, CK_DOT,  SE_MINS,
+                               CK_BSPC, CK_ENT,    CK_SPC,  CK_TAB
     ),
-    [1] = LAYOUT_split_3x5_2(
-    SE_EXLM, SE_AT,   SE_SCLN, SE_COLN, SE_UNDS,     SE_EQL,  KC_7,    KC_8,    KC_9,    SE_PLUS,
-    SE_BSLS, SE_PIPE, SE_LCBR, SE_LPRN, SE_LBRC,     SE_ASTR, KC_4,    KC_5,    KC_6,    SE_MINS,
-    KC_NO,   KC_NO,   SE_RCBR, SE_RPRN, SE_RBRC,     KC_0,    KC_1,    KC_2,    KC_3,    SE_SLSH,
-                               _______, MO(2),       _______, _______
+    [SYMB] = LAYOUT_split_3x5_2(
+    SE_EXLM,   SE_AT, SE_LCBR, SE_RCBR, SE_PIPE,     SE_PND,  SE_EURO, SE_QUES, SE_SECT, SE_CURR,
+    SE_HASH,  SE_DLR, SE_LPRN, SE_RPRN,  SE_GRV,     SE_PLUS, SE_MINS, SE_SLSH, SE_ASTR, SE_PERC,
+    SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD,     SE_AMPR, SE_EQL,  KC_COMM, SE_COLN, SE_BSLS,
+                               CK_SYST, _______,     CK_SYST, _______
     ),
-    [2] = LAYOUT_split_3x5_2(
-    RALT(KC_1), RALT(KC_2), RALT(KC_3), RALT(KC_4), KC_BRIU,     KC_NO,   SE_AMPR, SE_GRV,  SE_TILD, KC_NO,
-    KC_MUTE,    KC_VOLD,    KC_MPLY,    KC_VOLU,    KC_BRID,     KC_NO,   SE_DLR,  SE_PERC, SE_CIRC, SE_UNDS,
-    KC_EJCT,    KC_MPRV,    KC_MSTP,    KC_MNXT,    KC_NO,       KC_NO,   SE_EXLM, SE_AT,   SE_HASH, KC_NO,
-                                           _______, _______,     _______, _______
+    [NUMB] = LAYOUT_split_3x5_2(
+    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,
+    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_PGUP,
+    KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,    CK_WLFT, CK_WRGT, KC_HOME,  KC_END, KC_PGDN,
+                             _______, CK_SYST,    _______, CK_SYST
     ),
-    [3] = LAYOUT_split_3x5_2(
-    KC_ESC,        LALT(KC_LEFT), LCTL(KC_F),    LALT(KC_RGHT), KC_INS,            KC_PGUP, KC_HOME, KC_UP,   KC_END,  KC_CAPS,
-    OSM(MOD_LALT), OSM(MOD_LGUI), OSM(MOD_LSFT), OSM(MOD_LCTL), OSM(MOD_RALT),     KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_DEL,
-    LCTL(KC_Z),    LCTL(KC_X),    LCTL(KC_C),    KC_TAB,        LCTL(KC_V),        KC_ENT,  KC_BSPC, KC_RCTL, KC_LALT, KC_APP,
-                                                       _______, _______,           _______, MO(4)
+    [SYST] = LAYOUT_split_3x5_2(
+    KC_ESC,  KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_MUTE,  KC_NO,
+    KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_BRIU,  KC_MPRV,  KC_MNXT,  KC_VOLU,  KC_NO,
+    KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_BRID,  KC_MSTP,  KC_MPLY,  KC_VOLD,  KC_NO,
+                                  _______,  _______,    _______,  _______
     ),
-    [4] = LAYOUT_split_3x5_2(
-    KC_NO,         KC_NO,         RCS(KC_F),     KC_PSCR,       KC_NO,             KC_F12,  KC_F7,   KC_F8,   KC_F9,   KC_NO,
-    OSM(MOD_LALT), OSM(MOD_LGUI), OSM(MOD_LSFT), OSM(MOD_LCTL), OSM(MOD_RALT),     KC_F11,  KC_F4,   KC_F5,   KC_F6,   KC_NO,
-    RCS(KC_Z),     RCS(KC_X),     RCS(KC_C),     LSFT(KC_TAB),  RCS(KC_V),         KC_F10,  KC_F1,   KC_F2,   KC_F3,   KC_NO,
-                                                       _______, _______,           _______, _______
-    ),
-    [5] = LAYOUT_split_3x5_2(
-    KC_NO,  KC_NO,  KC_NO,  EH_RGHT,    KC_NO,             KC_NO,   KC_NO,     KC_NO,   KC_NO,   KC_NO,
-    KC_NO,  KC_NO,  KC_NO,    KC_NO,    KC_NO,             KC_NO,   KC_NO,   EH_LEFT,   KC_NO,   KC_NO,
-    KC_NO,  KC_NO,  KC_NO,    KC_NO,    RESET,             KC_NO,   KC_NO,     KC_NO,   KC_NO,   KC_NO,
+    [ADJUST] = LAYOUT_split_3x5_2(
+    KC_NO,  KC_NO,  KC_NO,  EH_RGHT,    KC_NO,             KC_NO,   KC_NO,   KC_NO,     KC_NO,   KC_NO,
+    KC_NO,  KC_NO,  KC_NO,    KC_NO,    KC_NO,             KC_NO,   KC_NO,   KC_NO,   EH_LEFT,   KC_NO,
+    KC_NO,  KC_NO,  KC_NO,    KC_NO,    RESET,             KC_NO,   KC_NO,   KC_NO,     KC_NO,   KC_NO,
                             _______,  _______,           _______, _______
     )
 };
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, 1, 3, 5);
-}
+layer_state_t layer_state_set_user(layer_state_t state) { return update_tri_layer_state(state, SYMB, NUMB, ADJUST); }
