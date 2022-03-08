@@ -23,10 +23,3 @@
 //#define COMBO_COUNT 3  // Enable if using combos.
 #define UNICODE_SELECTED_MODES UC_WINC
 #define IGNORE_MOD_TAP_INTERRUPT
-
-
-/* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
-#undef LOCKING_SUPPORT_ENABLE
-
-/* Locking resynchronize hack */
-#undef LOCKING_RESYNC_ENABLE
