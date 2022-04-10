@@ -79,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     CK_A,    CK_S,    CK_D,    CK_F,    KC_G,        KC_H,    CK_J,    CK_K,    CK_L,    CK_LABK,
 //  Z        X        C        V        B            N        M        ,        .        -
     KC_Z,    CK_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    SE_COMM, CK_DOT,  SE_MINS,
-                             CK_BSPC, CK_ENT,    CK_SPC,  CK_TAB
+                             CK_BSPC, CK_ENT,      CK_SPC,  CK_TAB
     ),
     [SYMB] = LAYOUT_split_3x5_2(
 /*  \!          @      {        }        |            £        €        ?        §        ¤       */
@@ -97,10 +97,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                              CK_LANG, CK_SYST,    CK_LANG, CK_SYST
     ),
     [SYST] = LAYOUT_split_3x5_2(
-    KC_ESC,  KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_MUTE,  KC_NO,
+    KC_ESC,  KC_NO,  KC_NO,  RESET,  KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_MUTE,  KC_NO,
     KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_BRIU,  KC_MPRV,  KC_MNXT,  KC_VOLU,  KC_NO,
     KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_BRID,  KC_MSTP,  KC_MPLY,  KC_VOLD,  KC_NO,
-                         _______,  _______,    _______,  _______
+                            KC_DEL,  _______,    _______,  _______
     ),
     [LANG] = LAYOUT_split_3x5_2(
 //  Ä         Å         É        `          `
@@ -119,7 +119,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-layer_state_t layer_state_set_user(layer_state_t state) { return update_tri_layer_state(state, SYMB, NUMB, ADJUST); }
+layer_state_t layer_state_set_user(layer_state_t state) {
+    setPinOutput(D5);
+    setPinOutput(B0);
+    switch (get_highest_layer(state)) {
+        case SYMB:
+            writePinLow(D5); // Light up LED at B0
+            break;
+        case NUMB:
+            writePinLow(B0); // Light up LED at D5
+            break;
+        default: //  for any other layers, or the default layer
+            // Turn both LEDs off.
+            writePinHigh(B0);
+            writePinHigh(D5);
+            break;
+    }
+
+    return update_tri_layer_state(state, SYMB, NUMB, ADJUST);
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {

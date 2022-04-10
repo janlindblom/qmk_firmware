@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SPLIT_LED_STATE_ENABLE
+
 #define TAPPING_TERM 200
 #define LAYER_STATE_8BIT
 #define NO_ACTION_MACRO
