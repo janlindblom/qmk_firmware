@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Used commands from spec sheet: https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf
 // for SH1106: https://www.velleman.eu/downloads/29/infosheets/sh1106_datasheet.pdf
+// for SH1107: https://www.displayfuture.com/Display/datasheet/controller/SH1107.pdf
 
 // Fundamental Commands
 #define CONTRAST 0x81
@@ -82,6 +83,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Charge Pump Commands
 #define CHARGE_PUMP 0x8D
 
+// Commands specific to SH110x chips
+
+// Commands specific to the SH1106 chip
+#define SH1106_OUTPUT_FOLLOWS_RAM 0xA4
+#define SH1106_VERTICAL_SCROLL_AREA 0xA3
+#define SH1106_LOW_COLUMN 0x00
+#define SH1106_HIGH_COLUMN 0x10
+#define SH1106_DISPLAY_START_LINE 0xDC
+#define SH1106_MEMORY_MODE_PAGE MEMORY_MODE
+
+// Commands specific to the SH1107 chip
+#define SH1107_DISPLAY_START_LINE 0xDC
+#define SH1107_MEMORY_MODE_PAGE MEMORY_MODE
+#define SH1107_MEMORY_MODE_VERTICAL 0x21
+
 // Misc defines
 #ifndef OLED_BLOCK_COUNT
 #    define OLED_BLOCK_COUNT (sizeof(OLED_BLOCK_TYPE) * 8)
@@ -91,6 +107,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #define OLED_ALL_BLOCKS_MASK (((((OLED_BLOCK_TYPE)1 << (OLED_BLOCK_COUNT - 1)) - 1) << 1) | 1)
+
+#ifndef OLED_COM_PIN_COUNT
+#    if OLED_IC == OLED_IC_SSD1306
+#        define OLED_COM_PIN_COUNT 64
+#    elif OLED_IC == OLED_IC_SH1106
+#        define OLED_COM_PIN_COUNT 64
+#    elif OLED_IC == OLED_IC_SH1107
+#        define OLED_COM_PIN_COUNT 128
+#    else
+#        error Invalid OLED_IC value
+#    endif
+#endif
+
+#ifndef OLED_COM_PIN_OFFSET
+#    define OLED_COM_PIN_OFFSET 0
+#endif
 
 // i2c defines
 #define I2C_CMD 0x00
@@ -181,16 +213,28 @@ bool oled_init(oled_rotation_t rotation) {
         DISPLAY_CLOCK,
         0x80,
         MULTIPLEX_RATIO,
+#if OLED_IC == OLED_IC_SH1107
+        OLED_DISPLAY_WIDTH - 1,
+#else
         OLED_DISPLAY_HEIGHT - 1,
+#endif
+#if OLED_IC == OLED_IC_SH1107
+        SH1107_DISPLAY_START_LINE,
+        0x00,
+#else
         DISPLAY_OFFSET,
         0x00,
         DISPLAY_START_LINE | 0x00,
+#endif
         CHARGE_PUMP,
         0x14,
-#if (OLED_IC != OLED_IC_SH1106)
+#if (OLED_IC != OLED_IC_SH1107) && (OLED_IC != OLED_IC_SH1106)
         // MEMORY_MODE is unsupported on SH1106 (Page Addressing only)
         MEMORY_MODE,
         0x00, // Horizontal addressing mode
+#elif OLED_IC == OLED_IC_SH1107
+        // Page addressing mode
+        SH1107_MEMORY_MODE_PAGE,
 #endif
     };
     if (I2C_TRANSMIT_P(display_setup1) != I2C_STATUS_SUCCESS) {
@@ -199,20 +243,58 @@ bool oled_init(oled_rotation_t rotation) {
     }
 
     if (!HAS_FLAGS(oled_rotation, OLED_ROTATION_180)) {
-        static const uint8_t PROGMEM display_normal[] = {I2C_CMD, SEGMENT_REMAP_INV, COM_SCAN_DEC};
+        static const uint8_t PROGMEM display_normal[] = {
+            I2C_CMD,
+            SEGMENT_REMAP_INV,
+            COM_SCAN_DEC,
+#if OLED_IC == OLED_IC_SH1107
+            DISPLAY_OFFSET,
+            OLED_COM_PIN_OFFSET,
+#endif
+        };
         if (I2C_TRANSMIT_P(display_normal) != I2C_STATUS_SUCCESS) {
             print("oled_init cmd normal rotation failed\n");
             return false;
         }
     } else {
-        static const uint8_t PROGMEM display_flipped[] = {I2C_CMD, SEGMENT_REMAP, COM_SCAN_INC};
+        static const uint8_t PROGMEM display_flipped[] = {
+            I2C_CMD,
+            SEGMENT_REMAP,
+            COM_SCAN_INC,
+#if OLED_IC == OLED_IC_SH1107
+            DISPLAY_OFFSET,
+            (OLED_COM_PIN_COUNT - OLED_COM_PIN_OFFSET) % OLED_COM_PIN_COUNT,
+#endif
+        };
         if (I2C_TRANSMIT_P(display_flipped) != I2C_STATUS_SUCCESS) {
             print("display_flipped failed\n");
             return false;
         }
     }
 
-    static const uint8_t PROGMEM display_setup2[] = {I2C_CMD, COM_PINS, OLED_COM_PINS, CONTRAST, OLED_BRIGHTNESS, PRE_CHARGE_PERIOD, 0xF1, VCOM_DETECT, 0x20, DISPLAY_ALL_ON_RESUME, NORMAL_DISPLAY, DEACTIVATE_SCROLL, DISPLAY_ON};
+    static const uint8_t PROGMEM display_setup2[] = {
+        I2C_CMD,
+        COM_PINS,
+        OLED_COM_PINS,
+        CONTRAST,
+        OLED_BRIGHTNESS,
+        PRE_CHARGE_PERIOD,
+#if OLED_IC == OLED_IC_SH1107
+        0x22,
+#else
+        0xF1,
+#endif
+        VCOM_DETECT,
+#if OLED_IC == OLED_IC_SH1107
+        0x35,
+#else
+        0x20,
+#endif
+        DISPLAY_ALL_ON_RESUME,
+        NORMAL_DISPLAY,
+        DEACTIVATE_SCROLL,
+        DISPLAY_ON
+    };
     if (I2C_TRANSMIT_P(display_setup2) != I2C_STATUS_SUCCESS) {
         print("display_setup2 failed\n");
         return false;
@@ -249,15 +331,12 @@ static void calc_bounds(uint8_t update_start, uint8_t *cmd_array) {
     // Calculate commands to set memory addressing bounds.
     uint8_t start_page   = OLED_BLOCK_SIZE * update_start / OLED_DISPLAY_WIDTH;
     uint8_t start_column = OLED_BLOCK_SIZE * update_start % OLED_DISPLAY_WIDTH;
-#if (OLED_IC == OLED_IC_SH1106)
+#if (OLED_IC == OLED_IC_SH1107) || (OLED_IC == OLED_IC_SH1106)
     // Commands for Page Addressing Mode. Sets starting page and column; has no end bound.
     // Column value must be split into high and low nybble and sent as two commands.
     cmd_array[0] = PAM_PAGE_ADDR | start_page;
     cmd_array[1] = PAM_SETCOLUMN_LSB | ((OLED_COLUMN_OFFSET + start_column) & 0x0f);
     cmd_array[2] = PAM_SETCOLUMN_MSB | ((OLED_COLUMN_OFFSET + start_column) >> 4 & 0x0f);
-    cmd_array[3] = NOP;
-    cmd_array[4] = NOP;
-    cmd_array[5] = NOP;
 #else
     // Commands for use in Horizontal Addressing mode.
     cmd_array[1] = start_column;
@@ -268,11 +347,33 @@ static void calc_bounds(uint8_t update_start, uint8_t *cmd_array) {
 }
 
 static void calc_bounds_90(uint8_t update_start, uint8_t *cmd_array) {
+#if (OLED_IC == OLED_IC_SH1107) || (OLED_IC == OLED_IC_SH1106)
+    // Block numbering starts from the bottom left corner, going up and then to
+    // the right.  The controller needs the page and column numbers for the top
+    // left and bottom right corners of that block.
+
+    // Total number of pages across the screen height.
+    const uint8_t height_in_pages = OLED_DISPLAY_HEIGHT / 8;
+
+    // Difference of starting page numbers for adjacent blocks; may be 0 if
+    // blocks are large enough to occupy one or more whole 8px columns.
+    const uint8_t page_inc_per_block = OLED_BLOCK_SIZE % OLED_DISPLAY_HEIGHT / 8;
+    // Top page number for a block which is at the bottom edge of the screen.
+    const uint8_t bottom_block_top_page = (height_in_pages - page_inc_per_block) % height_in_pages;
+
+    // Only the Page Addressing Mode is supported
+    uint8_t start_page   = bottom_block_top_page - (OLED_BLOCK_SIZE * update_start % OLED_DISPLAY_HEIGHT / 8);
+    uint8_t start_column = OLED_BLOCK_SIZE * update_start / OLED_DISPLAY_HEIGHT * 8;
+    cmd_array[0]         = PAM_PAGE_ADDR | start_page;
+    cmd_array[1]         = PAM_SETCOLUMN_LSB | ((OLED_COLUMN_OFFSET + start_column) & 0x0f);
+    cmd_array[2]         = PAM_SETCOLUMN_MSB | ((OLED_COLUMN_OFFSET + start_column) >> 4 & 0x0f);
+#else
     cmd_array[1] = OLED_BLOCK_SIZE * update_start / OLED_DISPLAY_HEIGHT * 8;
     cmd_array[4] = OLED_BLOCK_SIZE * update_start % OLED_DISPLAY_HEIGHT;
     cmd_array[2] = (OLED_BLOCK_SIZE + OLED_DISPLAY_HEIGHT - 1) / OLED_DISPLAY_HEIGHT * 8 - 1 + cmd_array[1];
     ;
     cmd_array[5] = (OLED_BLOCK_SIZE + OLED_DISPLAY_HEIGHT - 1) % OLED_DISPLAY_HEIGHT / 8;
+#endif
 }
 
 uint8_t crot(uint8_t a, int8_t n) {
@@ -308,7 +409,11 @@ void oled_render(void) {
     }
 
     // Set column & page position
+#if (OLED_IC == OLED_IC_SH1106) || (OLED_IC == OLED_IC_SH1107)
+    static uint8_t display_start[] = {I2C_CMD, PAM_PAGE_ADDR, PAM_SETCOLUMN_LSB, PAM_SETCOLUMN_MSB};
+#else
     static uint8_t display_start[] = {I2C_CMD, COLUMN_ADDR, 0, OLED_DISPLAY_WIDTH - 1, PAGE_ADDR, 0, OLED_DISPLAY_HEIGHT / 8 - 1};
+#endif
     if (!HAS_FLAGS(oled_rotation, OLED_ROTATION_90)) {
         calc_bounds(update_start, &display_start[1]); // Offset from I2C_CMD byte at the start
     } else {
@@ -339,10 +444,31 @@ void oled_render(void) {
         }
 
         // Send render data chunk after rotating
+#if (OLED_IC == OLED_IC_SH1106) || (OLED_IC == OLED_IC_SH1107)
+        // For SH1106 or SH1107 the data chunk must be split into separate pieces for each page
+        const uint8_t columns_in_block = (OLED_BLOCK_SIZE + OLED_DISPLAY_HEIGHT - 1) / OLED_DISPLAY_HEIGHT * 8;
+        const uint8_t num_pages = OLED_BLOCK_SIZE / columns_in_block;
+        for (uint8_t i = 0; i < num_pages; ++i) {
+            // Send column & page position for all pages except the first one
+            if (i > 0) {
+                display_start[1]++;
+                if (I2C_TRANSMIT(display_start) != I2C_STATUS_SUCCESS) {
+                    print("oled_render offset command failed\n");
+                    return;
+                }
+            }
+            // Send data for the page
+            if (I2C_WRITE_REG(I2C_DATA, &temp_buffer[columns_in_block * i], columns_in_block) != I2C_STATUS_SUCCESS) {
+                print("oled_render90 data failed\n");
+                return;
+            }
+        }
+#else
         if (I2C_WRITE_REG(I2C_DATA, &temp_buffer[0], OLED_BLOCK_SIZE) != I2C_STATUS_SUCCESS) {
             print("oled_render90 data failed\n");
             return;
         }
+#endif
     }
 
     // Turn on display if it is off

@@ -22,10 +22,60 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // an enumeration of the chips this driver supports
 #define OLED_IC_SSD1306 0
 #define OLED_IC_SH1106 1
+#define OLED_IC_SH1107 2
 
 #if defined(OLED_DISPLAY_CUSTOM)
 // Expected user to implement the necessary defines
-#elif defined(OLED_DISPLAY_128X64)
+#elif defined(OLED_DISPLAY_64X128)
+// Double height 128x64
+#    ifndef OLED_DISPLAY_WIDTH
+#        define OLED_DISPLAY_WIDTH 64
+#    endif
+#    ifndef OLED_DISPLAY_HEIGHT
+#        define OLED_DISPLAY_HEIGHT 128
+#    endif
+#    ifndef OLED_MATRIX_SIZE
+#        define OLED_MATRIX_SIZE (OLED_DISPLAY_HEIGHT / 8 * OLED_DISPLAY_WIDTH)
+#    endif
+#    ifndef OLED_BLOCK_TYPE
+#        define OLED_BLOCK_TYPE uint16_t
+#    endif
+#    ifndef OLED_BLOCK_COUNT
+#        define OLED_BLOCK_COUNT (sizeof(OLED_BLOCK_TYPE) * 8)
+#    endif
+#    ifndef OLED_BLOCK_SIZE
+#        define OLED_BLOCK_SIZE (OLED_MATRIX_SIZE / OLED_BLOCK_COUNT)
+#    endif
+#    ifndef OLED_COM_PINS
+#        define OLED_COM_PINS COM_PINS_ALT
+#    endif
+
+// For 90 degree rotation, we map our internal matrix to oled matrix using fixed arrays
+// The OLED writes to it's memory horizontally, starting top left, but our memory starts bottom left in this mode
+#    ifndef OLED_SOURCE_MAP
+#        define OLED_SOURCE_MAP \
+            { 0, 8, 16, 24, 32, 40, 48, 56 }
+#    endif
+#    ifndef OLED_TARGET_MAP
+#        define OLED_TARGET_MAP \
+            { 56, 48, 40, 32, 24, 16, 8, 0 }
+#    endif
+// If OLED_BLOCK_TYPE is uint32_t, these tables would look like:
+// #define OLED_SOURCE_MAP { 32, 40, 48, 56 }
+// #define OLED_TARGET_MAP { 24, 16, 8, 0 }
+// If OLED_BLOCK_TYPE is uint16_t, these tables would look like:
+// #define OLED_SOURCE_MAP { 0, 8, 16, 24, 32, 40, 48, 56 }
+// #define OLED_TARGET_MAP { 56, 48, 40, 32, 24, 16, 8, 0 }
+// If OLED_BLOCK_TYPE is uint8_t, these tables would look like:
+// #define OLED_SOURCE_MAP { 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120 }
+// #define OLED_TARGET_MAP { 56, 120, 48, 112, 40, 104, 32, 96, 24, 88, 16, 80, 8, 72, 0, 64 }
+#    ifndef OLED_BRIGHTNESS
+#        define OLED_BRIGHTNESS 50
+#    endif
+#    ifndef OLED_UPDATE_INTERVAL
+#        define OLED_UPDATE_INTERVAL 100
+#    endif
+#elif defined(OLED_DISPLAY_128X64) // defined(OLED_DISPLAY_128X64) && (defined(OLED_IC) && (OLED_IC == OLED_IC_SH1107))
 // Double height 128x64
 #    ifndef OLED_DISPLAY_WIDTH
 #        define OLED_DISPLAY_WIDTH 128
