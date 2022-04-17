@@ -66,6 +66,25 @@ bool process_record_user_oled(uint16_t keycode, keyrecord_t *record) {
 }
 
 #ifdef OLED_ENABLE
+void kitten_down(void) {
+#    if defined(WPM_ENABLE) && defined(RENDER_KITTY) && defined(DEFERRED_EXEC_ENABLE)
+    if (kitten != INVALID_DEFERRED_TOKEN) {
+        if (cancel_deferred_exec(kitten)) {
+            kitten = INVALID_DEFERRED_TOKEN;
+        }
+    }
+#    endif
+}
+
+void kitten_up() {
+#    if defined(WPM_ENABLE) && defined(RENDER_KITTY) && defined(DEFERRED_EXEC_ENABLE)
+    if (kitten != INVALID_DEFERRED_TOKEN) {
+        cancel_deferred_exec(kitten);
+    }
+    kitten = defer_exec(3000, kitty_animation_phases, NULL);
+#    endif
+}
+
 #    if defined(WPM_ENABLE) && defined(RENDER_KITTY)
 // WPM-responsive animation stuff here
 #        define OLED_SLEEP_FRAMES 2
@@ -340,10 +359,11 @@ bool oled_task_user(void) {
         if (timer_elapsed32(oled_on_timer) > CUSTOM_OLED_TIMEOUT) {
             oled_off();
             return false;
-        } else {
+        } else
+#    endif
+        {
             oled_on();
         }
-#    endif
 
 #    if defined(WPM_ENABLE) && defined(RENDER_KITTY)
         render_kitty();
@@ -375,12 +395,36 @@ __attribute__((weak)) oled_rotation_t oled_init_keymap(oled_rotation_t rotation)
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-#    if defined(WPM_ENABLE) && defined(RENDER_KITTY) && defined(DEFERRED_EXEC_ENABLE)
-    kitten = defer_exec(3000, kitty_animation_phases, NULL);
-#    endif
-
+    kitten_up();
     oled_clear();
     oled_render();
     return oled_init_keymap(rotation);
 }
 #endif // OLED_ENABLE
+
+__attribute__((weak)) void shutdown_keymap(void) {}
+void                       shutdown_user(void) {
+#ifdef OLED_ENABLE
+    kitten_down();
+    oled_off();
+#endif
+    shutdown_keymap();
+}
+
+__attribute__((weak)) void suspend_power_down_keymap(void) {}
+
+void suspend_power_down_user(void) {
+#ifdef OLED_ENABLE
+    kitten_down();
+    oled_off();
+#endif
+    suspend_power_down_keymap();
+}
+
+__attribute__((weak)) void suspend_wakeup_init_keymap(void) {}
+void                       suspend_wakeup_init_user(void) {
+#ifdef OLED_ENABLE
+    kitten_up();
+#endif
+    suspend_wakeup_init_keymap();
+}

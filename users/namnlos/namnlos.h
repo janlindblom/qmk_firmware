@@ -32,6 +32,9 @@ void keyboard_pre_init_keymap(void);
 void keyboard_pre_init_user(void);
 void eeconfig_init_keymap(void);
 void eeconfig_init_user(void);
+void shutdown_keymap(void);
+void suspend_power_down_keymap(void);
+void suspend_wakeup_init_keymap(void);
 #ifdef OLED_ENABLE
 #    ifdef CUSTOM_OLED_TIMEOUT
 extern uint32_t oled_on_timer;
@@ -42,7 +45,8 @@ extern deferred_token kitten;
 void                  render_kitty(void);
 uint32_t              kitty_animation_phases(uint32_t triger_time, void *cb_arg);
 #    endif
-
+void            kitten_up(void);
+void            kitten_down(void);
 bool            oled_task_keymap(void);
 bool            oled_task_user(void);
 bool            process_record_user_oled(uint16_t keycode, keyrecord_t *record);
