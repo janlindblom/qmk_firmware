@@ -1,0 +1,55 @@
+{
+    "manufacturer": "ajcraig",
+    "keyboard_name": "7button_3dx_macropad",
+    "maintainer": "janlindblom",
+    "development_board": "promicro",
+    "bootloader": "caterina",
+    "diode_direction": "COL2ROW",
+    "features": {
+        "bootmagic": true,
+        "command": false,
+        "console": true,
+        "extrakey": true,
+        "mousekey": false,
+        "nkro": false
+    },
+    "build": {
+        "lto": true
+    },
+    "matrix_pins": {
+        "cols": ["D4", "C6", "D7", "B2"],
+        "rows": ["B6", "D0"]
+    },
+    "processor": "atmega32u4",
+    "url": "",
+    "usb": {
+        "device_version": "1.0.0",
+        "pid": "0x0001",
+        "vid": "0x4E4C"
+    },
+    "macros": [
+        [
+            {"action": "down", "keycodes": ["LCTL"]},
+            {"action":"tap", "keycodes": ["N"]},
+            {"action":"up", "keycodes": ["LCTL"]}
+        ],
+        [
+            {"action": "down", "keycodes": ["LCTL"]},
+            {"action":"tap", "keycodes": ["S"]},
+            {"action":"up", "keycodes": ["LCTL"]}
+        ]
+    ],
+    "layouts": {
+        "LAYOUT": {
+            "layout": [
+                { "label": "k00", "x": 0, "y": 3 },
+                { "label": "k01", "x": 0, "y": 2 },
+                { "label": "k02", "x": 0, "y": 1 },
+                { "label": "k10", "x": 1, "y": 3 },
+                { "label": "k11", "x": 1, "y": 2 },
+                { "label": "k12", "x": 1, "y": 1 },
+                { "label": "k13", "x": 1, "y": 0 }
+            ]
+        }
+    }
+}
