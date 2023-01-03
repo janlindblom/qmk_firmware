@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
+#include "stddef.h"
 #include "rgblight/rgblight.h"
+#include "action_layer.h"
 #include "keycodes.h"
 
 enum layers {

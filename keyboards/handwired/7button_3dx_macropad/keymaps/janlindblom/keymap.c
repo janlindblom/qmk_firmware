@@ -41,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * │ L │ C │ M │
      * ├───┼───┼───┼───┐
      * │ R │ P │ E │L3 │
-     * └───┴───┴───┴───┘
+     * └───┴───┴───┴───┘pppp
      */
     [_ADESK] = LAYOUT(
         KC_L,    KC_C,    KC_M,
@@ -61,9 +61,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // clang-format on
 };
 
-const rgblight_segment_t PROGMEM layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 5, HSV_WHITE});
-const rgblight_segment_t PROGMEM layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 5, HSV_KICAD});
-const rgblight_segment_t PROGMEM layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 5, HSV_ADESK});
+const rgblight_segment_t PROGMEM layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 5, HSV_CHARTREUSE});
+const rgblight_segment_t PROGMEM layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 5, HSV_BLUE});
+const rgblight_segment_t PROGMEM layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 5, HSV_ORANGE});
 const rgblight_segment_t PROGMEM layer4_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 5, HSV_RED});
 
 const rgblight_segment_t* const PROGMEM rgb_layers[] = RGBLIGHT_LAYERS_LIST(layer1_layer, layer2_layer, layer3_layer, layer4_layer);
