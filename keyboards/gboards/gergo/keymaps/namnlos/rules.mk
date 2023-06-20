@@ -13,11 +13,12 @@ WPM_ENABLE                  = yes
 TAP_DANCE_ENABLE            = yes
 UNICODE_ENABLE              = yes
 DEFERRED_EXEC_ENABLE        = yes
-COMMAND_ENABLE              = yes
+COMMAND_ENABLE              = no
 NKRO_ENABLE                 = yes
 DEBOUNCE_TYPE               = sym_eager_pr
 RENDER_PET                  = yes
 OLED_VERTICAL               = yes
+APPLICATION_ICONS           = yes
 
 # Saving space, make sure _everything_ we're not using is disabled
 MIDI_ENABLE                 = no

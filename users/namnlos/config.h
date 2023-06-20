@@ -24,6 +24,7 @@
 #define CRC8_OPTIMIZE_SPEED
 
 #define TAPPING_TERM 200
+#define TAPPING_TERM_PER_KEY
 
 #define KEYBOARD_SLEEP_TIMEOUT 120000u
 
@@ -31,15 +32,15 @@
    subsequently, if we don't need mousekeys we can save some space by switching
    to 8 bit layer state.
 */
-#if !defined(MOUSEKEY_ENABLE) && !defined(EXTRA_FUNCTION_LAYER)
-#    define LAYER_STATE_8BIT
-#else
+#if defined(MOUSEKEY_ENABLE) || defined(EXTRA_FUNCTION_LAYER)
 #    undef LAYER_STATE_8BIT
 #    define LAYER_STATE_16BIT
+#else
+#    define LAYER_STATE_8BIT
 #endif
 
 #if defined(UNICODE_ENABLED) || defined(UNICODEMAP_ENABLED)
-#    define UNICODE_SELECTED_MODES UNICODE_MODE_WINCOMPOSE, UNICODE_MODE_MACOS, UNICODE_MODE_LINUX
+#    define UNICODE_SELECTED_MODES UNICODE_MODE_WINCOMPOSE, UNICODE_MODE_LINUX, UNICODE_MODE_MACOS
 #endif
 
 #ifdef LOCKING_SUPPORT_ENABLE

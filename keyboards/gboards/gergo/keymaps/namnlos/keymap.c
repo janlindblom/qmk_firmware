@@ -25,7 +25,7 @@ extern userspace_config_t userspace_config;
 
 // Tap Dance definitions
 #ifdef TAP_DANCE_ENABLE
-enum dances {
+enum {
     TD_SHFT_CAPS,
 };
 
@@ -48,6 +48,7 @@ tap_dance_action_t tap_dance_actions[] = {
 #define CK_SPC2 LT(_NUMB, KC_SPC)
 #define CK_TAB MT(MOD_RALT, KC_TAB)
 #define CK_ADIA MT(MOD_RCTL, SE_ADIA)
+#define CK_MINS MT(MOD_RCTL, SE_MINS)
 #define CK_QUOT MT(MOD_RSFT, SE_QUOT)
 #define CK_CUT LCTL(KC_X)
 #define CK_COPY LCTL(KC_C)
@@ -55,7 +56,6 @@ tap_dance_action_t tap_dance_actions[] = {
 #define CK_WRGT C(KC_RGHT)
 #define CK_WLFT C(KC_LEFT)
 #define CK_BSP2 LT(_MOUSE, KC_BSPC)
-#define CK_KOTG KEY_OVERRIDE_TOGGLE
 #define CK_ENT3 LT(_SYMB, KC_ENT)
 
 #define ADJUST MO(_ADJST)
@@ -119,7 +119,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         SK_NOT_EQL, SE_EXLM,   SE_AT, SE_LCBR, SE_RCBR, SE_PIPE,                                              SE_PND, SE_EURO, SE_QUES, SE_SECT, SE_CURR, SE_DIAE,
             SK_LEQ, SE_HASH,  SE_DLR, SE_LPRN, SE_RPRN,  SE_GRV, XXXXXXX,                           SE_DQUO, SE_PLUS, SE_MINS, SE_SLSH, SE_ASTR, SE_ACUT, CK_EMDASH,
             SK_GEQ, SE_PERC, SE_CIRC, SE_LBRC, SE_RBRC, SE_TILD, XXXXXXX, CK_COPY,         KC_PGUP, XXXXXXX, SE_AMPR,  SE_EQL, SE_LABK, SE_RABK, SE_BSLS, CK_ENDASH,
-                                               _______, _______, _______,  _______,        _______, ADJUST,  _______, KC_DEL),
+                                               _______, _______, _______,  _______,        _______, _______, _______, KC_DEL),
     /* Keymap 2: Pad/Function layer
      *
      * ,-------------------------------------------.                         ,-------------------------------------------.
@@ -144,7 +144,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                                                KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_MUTE,
         KC_F12,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5, XXXXXXX,                           _______, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_PGUP, KC_VOLU,
         KC_F11,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, XXXXXXX,  CK_CUT,         _______, _______, CK_WLFT, CK_WRGT, KC_HOME,  KC_END, KC_PGDN, KC_VOLD,
-                                           _______, _______,  ADJUST, _______,         _______, _______, _______, _______),
+                                           _______, _______, _______, _______,         _______, _______, _______, _______),
+    /* Adjustments and system
+     *
+     * ,-------------------------------------------.                         ,-------------------------------------------.
+     * |        |QMKmke|      |      |      |      |                         |      |      |      |      |      |        |
+     * |--------+------+------+------+------+------|------.           .------|------+------+------+------+------+--------|
+     * |        |AuDesk|      |      |      |OLEDB+|      |           |      |      |      |KiCAD |      |      |        |
+     * |--------+------+------+------+------+------|      |           |------|------+------+------+------+------+--------|
+     * |        |      |      |      |      |OLEDB-|      |           |      |      |      |      |      |      |        |
+     * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+     *                        .------.   .------.                                 .------.   .-----.
+     *                        |      |   |      |                                 |      |   |     |
+     *                        '------'   '------'                                 `------.   '-----'
+     *                                        ,-------.       ,-------.
+     *                                        |       |       |       |
+     *                                 ,------|-------|       |-------|------.
+     *                                 |      |       |       |       |      |
+     *                                 |      |       |       |       |      |
+     *                                 |      |       |       |       |      |
+     *                                 `--------------'       `--------------'
+     */
+    [_ADJST] = LAYOUT(
+        XXXXXXX, QK_MAKE,  XXXXXXX, CG_NORM, QK_BOOT, XXXXXXX,                                                 XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, CK_ADESK,CK_SVORAK,CG_SWAP, CK_OBI,  CK_GAMING, XXXXXXX,                             XXXXXXX, XXXXXXX, XXXXXXX, CK_KICAD, KC_MSTP, KC_MPLY, XXXXXXX,
+        XXXXXXX, XXXXXXX,  XXXXXXX, CG_TOGG, CK_OBD,  XXXXXXX,   XXXXXXX, XXXXXXX,         CK_QWERTY, XXXXXXX, NK_TOGG, XXXXXXX,  XXXXXXX, KC_MPRV, KC_MNXT, XXXXXXX,
+                                             _______, _______, _______, _______,           _______, _______, _______, _______),
     /* Mouse control
      *
      * ,-------------------------------------------.                         ,-------------------------------------------.
@@ -171,31 +196,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_R, KC_WH_U, XXXXXXX,                           XXXXXXX, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_D, XXXXXXX, XXXXXXX,         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                             _______, _______, KC_BTN1, KC_BTN2,         _______, _______, _______, _______),
-    /* Adjustments and system
+    /* Svorak
      *
-     * ,-------------------------------------------.                         ,-------------------------------------------.
-     * |        |QMKmke|      |      |      |      |                         |      |      |      |      |      |        |
-     * |--------+------+------+------+------+------|------.           .------|------+------+------+------+------+--------|
-     * |        |AuDesk|      |      |      |OLEDB+|      |           |      |      |      |KiCAD |      |      |        |
-     * |--------+------+------+------+------+------|      |           |------|------+------+------+------+------+--------|
-     * |        |      |      |      |      |OLEDB-|      |           |      |      |      |      |      |      |        |
-     * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
-     *                        .------.   .------.                                 .------.   .-----.
-     *                        |      |   |      |                                 |      |   |     |
-     *                        '------'   '------'                                 `------.   '-----'
-     *                                        ,-------.       ,-------.
-     *                                        |       |       |       |
-     *                                 ,------|-------|       |-------|------.
-     *                                 |      |       |       |       |      |
-     *                                 |      |       |       |       |      |
-     *                                 |      |       |       |       |      |
-     *                                 `--------------'       `--------------'
+     * ,--------------------------------------------.                         ,-------------------------------------------.
+     * | NUMB/⎋  |   Q  |   W  |   E  |   R  |   T  |                         |   Y  |   U  |   I  |   O  |   P  |   Å    |
+     * |---------+------+------+------+------+------|------.           .------|------+------+------+------+------+--------|
+     * |Ctrl/BkSp|   A  |   S  |  D   |   F  |   G  |      |           | BkSp |   H  |   J  |   K  |   L  |   Ö  | Ctrl/Ä |
+     * |---------+------+------+------+------+------|      |           |------|------+------+------+------+------+--------|
+     * | ⇧/Caps  |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  | , ;  | . :  | - _  | ⇧ / '* |
+     * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+     *                    .----------.   .-------.                                 .-----------.   .-----.
+     *                    |  Win/Del |   |  ↲/ALT|                                 | ⭾/AltGr |    |BKSP |
+     *                    '----------'   '-------'                                 `-----------.   '-----'
+     *                                        ,-------.                      ,-------.
+     *                                        | Paste |                      |   ⇟   |
+     *                                 ,------|-------|                      |-------|------.
+     *                                 | SYMB | NUMB  |                      | SYMB  | NUMB |
+     *                                 |   ⎵  |  ⎋    |                      |   ↲   |   ⎵  |
+     *                                 |      |       |                      |       |      |
+     *                                 `--------------'                      `--------------'
      */
-    [_ADJST] = LAYOUT(
-        XXXXXXX, QK_MAKE,  XXXXXXX, CG_NORM, QK_BOOT, XXXXXXX,                                                 XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_ADESK, XXXXXXX, CG_SWAP, CK_OBI,  KC_GAMING, XXXXXXX,                             XXXXXXX, XXXXXXX, XXXXXXX, KC_KICAD, KC_MSTP, KC_MPLY, XXXXXXX,
-        XXXXXXX, XXXXXXX,  XXXXXXX, CG_TOGG, CK_OBD,  XXXXXXX,   XXXXXXX, XXXXXXX,         KC_QWERTY, XXXXXXX, NK_TOGG, XXXXXXX,  XXXXXXX, KC_MPRV, KC_MNXT, XXXXXXX,
-                                             _______, _______, _______, _______,           _______, _______, _______, _______),
+    [_SVRK] = LAYOUT(
+         CK_ESC, SE_ARNG, SE_ADIA, SE_ODIA,    KC_P,    KC_Y,                                               KC_F,    KC_G,   KC_C,     KC_R,    KC_L, SE_COMM,
+        CK_BSPC,    KC_A,    KC_O,    KC_E,    KC_U,    KC_I, _______,                           KC_BSPC,   KC_D,    KC_H,   KC_T,     KC_N,    KC_S, CK_MINS,
+        CK_LSFT,  SE_DOT,    KC_Q,    KC_J,    KC_K,    KC_X, _______, CK_PSTE,         KC_PGDN, XXXXXXX,   KC_B,    KC_M,   KC_W,     KC_V,    KC_Z, CK_QUOT,
+                                             CK_DEL, CK_ENT1, CK_SPC1,  CK_ESC,         CK_ENT2, CK_SPC2, CK_TAB, CK_QWERTY),
     /*
      *
      * ,-------------------------------------------.                         ,-------------------------------------------.
@@ -219,7 +244,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_KICAD] = LAYOUT(
         KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                                                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         KC_LCTL, KC_A,    KC_L,    KC_D,    KC_M,    KC_G,    XXXXXXX,                              XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    XXXXXXX,  KC_Y,           KC_QWERTY,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    XXXXXXX,  KC_Y,           CK_QWERTY,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                             KC_DEL,  CK_ENT1, CK_SPC1,  CK_ESC,         CK_ENT2, CK_SPC2, CK_TAB, CK_BSP2),
 
     /*
@@ -245,19 +270,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_ADESK] = LAYOUT(
         KC_ESC,  KC_I,    KC_M,    KC_E,    KC_R,    KC_T,                                                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_J,    XXXXXXX,                              XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        KC_LSFT, KC_P,    KC_X,    KC_C,    KC_V,    KC_B,    XXXXXXX,  KC_M,           KC_QWERTY,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_LSFT, KC_P,    KC_X,    KC_C,    KC_V,    KC_B,    XXXXXXX,  KC_M,           CK_QWERTY,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                              KC_DEL, CK_ENT1, CK_SPC1,  CK_ESC,         CK_ENT2, CK_SPC2, CK_TAB, CK_BSP2),
 
     [_GAMING] = LAYOUT(
         KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                                                   KC_Y,    KC_U,   KC_I,     KC_O,    KC_P, KC_MUTE,
         KC_TAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G, XXXXXXX,                               KC_BSPC,KC_LEFT, KC_DOWN,  KC_UP,  KC_RGHT, KC_BRIU, KC_VOLU,
-        KC_LSFT, KC_1,    KC_2,    KC_3,    KC_4,    KC_5, XXXXXXX, XXXXXXX,           KC_QWERTY, XXXXXXX,   KC_N,    KC_M, SE_COMM,  SE_DOT, KC_BRID, KC_VOLD,
+        KC_LSFT, KC_1,    KC_2,    KC_3,    KC_4,    KC_5, XXXXXXX, XXXXXXX,           CK_QWERTY, XXXXXXX,   KC_N,    KC_M, SE_COMM,  SE_DOT, KC_BRID, KC_VOLD,
                                             CK_DEL,  KC_SPC, CK_ENT3,  CK_ESC,           CK_ENT2, CK_SPC2, CK_TAB, CK_BSP2),
 };
 // clang-format on
 
 void render_layer_name(uint_fast8_t layer) {
-    static const char PROGMEM layer_names[][10] = {
+    static const char PROGMEM layer_names[][6] = {
         // clang-format off
         [_KICAD] = OLED_RENDER_LAYOUT_KICAD,
         [_ADESK] = OLED_RENDER_LAYOUT_ADESK,
@@ -274,24 +299,18 @@ void render_layer_name(uint_fast8_t layer) {
 
 #ifdef OLED_ENABLE
 bool render_layer_state_keymap(void) {
-    userspace_config.raw         = eeconfig_read_user();
-    userspace_config.gaming_mode = false;
-    uint_least8_t top_layer      = get_highest_layer(default_layer_state);
+    uint_least8_t top_layer = get_highest_layer(default_layer_state);
     switch (top_layer) {
         case _KICAD:
         case _ADESK:
             render_layer_name(top_layer);
             break;
         case _GAMING:
-            // Catch gaming layers to set gaming_mode true and break to return false.
-            userspace_config.gaming_mode = true;
-            eeconfig_update_user(userspace_config.raw);
             render_layer_name(top_layer);
             break;
         default:
             return true; // return true and let userspace level render_layer_state run.
     }
-    eeconfig_update_user(userspace_config.raw);
     return false; // return false to prevent userspace level render_layer_state from running.
 }
 
