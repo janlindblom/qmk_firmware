@@ -36,22 +36,18 @@
 #endif
 
 #if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_LAYERS)
-#include "lights/rgb_layer.h"
+#    include "lights/rgb_layer.h"
 #endif
 
 enum layers {
     _BASE = 0, // default layer
-    _SYMB,     // symbols
-    _LOWER = _SYMB,
-    _NUMB,     // numbers etc
-    _RAISE = _NUMB,
-    _ADJST,    // Adjustments and system
-#ifndef MOUSEKEY_ENABLE
-    _LANG,
-#else
+#ifdef MOUSEKEY_ENABLE
     _MOUSE,
     _LANG,
+#else
+    _LANG,
 #endif
+    _SVRK = _LANG,
     _KICAD,  // KiCad base layer
     _ADESK,  // Fusion360 base layer
     _GAMING, // Gaming base layer
@@ -59,12 +55,26 @@ enum layers {
 #ifdef EXTRA_FUNCTION_LAYER
     _FUNC,
 #endif
+    _SYMB, // symbols
+    _LOWER = _SYMB,
+    _NUMB, // numbers etc
+    _RAISE = _NUMB,
+    _ADJST, // Adjustments and system
 };
 
+//// Combined keys
 #define CK_UNDO LCTL(KC_Z)
 #define CK_CUT LCTL(KC_X)
 #define CK_COPY LCTL(KC_C)
 #define CK_PSTE LCTL(KC_V)
+
+//// Layer keys
+#define CK_BASE DF(_BASE)
+#define CK_QWERTY CK_BASE     // "Reset", set BASE layer as default
+#define CK_KICAD DF(_KICAD)   // KiCad layer switch
+#define CK_ADESK DF(_ADESK)   // Autodesk layer switch
+#define CK_GAMING DF(_GAMING) // Minecraft layer switch
+#define CK_SVORAK DF(_SVRK)   // SVORAK layer switch
 
 // Custom keycodes.
 enum custom_keycodes {
@@ -74,11 +84,6 @@ enum custom_keycodes {
 
     CK_OBI, // OLED Brightness Increase
     CK_OBD, // OLED Brightness Decrease
-
-    KC_QWERTY, // "Reset", set BASE layer as default
-    KC_KICAD,  // KiCad layer
-    KC_ADESK,  // Autodesk layer
-    KC_GAMING, // Minecraft layer
 #ifdef BACKLIGHT_ENABLE
     CK_BACKLIGHT_LEVEL_REPORT,
     SK_BLL = CK_BACKLIGHT_LEVEL_REPORT,
@@ -146,6 +151,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation);
 #        define OLED_RENDER_LAYOUT_ADESK "Autodesk"
 #        define OLED_RENDER_LAYOUT_KICAD "KiCad"
 #        define OLED_RENDER_LAYOUT_GAMING "Gaming"
+#        define OLED_RENDER_LAYOUT_SVORAK "Svorak"
 #        define OLED_RENDER_LAYER_LOWER "Lower"
 #        define OLED_RENDER_LAYER_SYMB "Symbols"
 #        define OLED_RENDER_LAYER_NUMB "Numbers"
@@ -195,24 +201,25 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation);
 #        endif
 #    else // This is a limited width display (like a 32x128 OLED)
 #        define OLED_RENDER_LAYOUT_QWERTY "QWRTY"
-#        define OLED_RENDER_LAYOUT_ADESK "Adesk"
+#        define OLED_RENDER_LAYOUT_ADESK "ADesk"
 #        define OLED_RENDER_LAYOUT_KICAD "KiCad"
-#        define OLED_RENDER_LAYOUT_GAMING "Gming"
+#        define OLED_RENDER_LAYOUT_GAMING "Game "
+#        define OLED_RENDER_LAYOUT_SVORAK "VORAK"
 #        define OLED_RENDER_LAYER_LOWER "Lower"
-#        define OLED_RENDER_LAYER_SYMB "Symbs"
-#        define OLED_RENDER_LAYER_NUMB "Numbs"
+#        define OLED_RENDER_LAYER_SYMB "Symb "
+#        define OLED_RENDER_LAYER_NUMB "Numb "
 #        define OLED_RENDER_LAYER_RAISE "Raise"
 #        define OLED_RENDER_LAYER_ADJUST "Adjst"
 #        define OLED_RENDER_LAYER_MOUSE "Mouse"
-#        define OLED_RENDER_LAYER_LANG "Lingo"
-#        define OLED_RENDER_LAYER_FUNC "Funcs"
+#        define OLED_RENDER_LAYER_LANG "Lang "
+#        define OLED_RENDER_LAYER_FUNC "Func "
 #        define OLED_RENDER_LAYER_UNDEFINED "Undef"
 #        define PET_LINE 0
 #        define OLED_LAYER_LINE 0
 #        define OLED_MODS_LINE 2
 #        define OLED_KEYLOCK_LINE 5
-#        define OLED_WPM_LINE 8
-#        define OLED_STATUS_LINE 8
+#        define OLED_WPM_LINE 9
+#        define OLED_STATUS_LINE 9
 #        define OLED_MAGIC_LINE 10
 #    endif
 #endif // OLED_ENABLE
