@@ -17,6 +17,12 @@
 #include "quantum.h"
 #include "send_string.h"
 #include "os_detection.h"
+#include "host.h"
+#if defined(UNICODE_ENABLE)
+#    include "unicode.h"
+#elif defined(UNICODEMAP_ENABLE)
+#    include "unicodemap.h"
+#endif
 #include "namnlos.h"
 #include "extensions/tap_dance.h"
 #include "control/control_idle.h"
@@ -43,18 +49,6 @@
 extern const rgblight_segment_t *const PROGMEM namnlos_rgb_layers[];
 #endif
 
-/**
- * @brief Set the default layer optionally saving it to EEPROM if EEPROM_DEFAULT_LAYER_SAVE is defined.
- *
- * @param layer the layer to set as the default.
- */
-void SET_DEFAULT_LAYER(uint8_t layer) {
-#ifdef EEPROM_DEFAULT_LAYER_SAVE
-    eeconfig_update_default_layer(layer); // Save the default layer to EEPROM
-#endif                                    // EEPROM_DEFAULT_LAYER_SAVE
-    default_layer_set((layer_state_t)1u << layer);
-}
-
 #ifdef OLED_ENABLE
 static const char PROGMEM oled_space[2] = {0x20, 0};
 #endif
@@ -62,24 +56,31 @@ static const char PROGMEM oled_space[2] = {0x20, 0};
 userspace_config_t userspace_config;
 
 #if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
-/*
-// clang-format off
-static const char PROGMEM os_names[5][8] = {
-    [OS_UNSURE] = "UNSURE",
-    [OS_LINUX] = "Linux",
-    [OS_WINDOWS] = "Windows",
-    [OS_MACOS] = "macOS",
-    [OS_IOS] = "iOS"};
-// clang-format on
-*/
-
 os_variant_t os_type = OS_UNSURE;
 
 uint32_t os_specific_setup(uint32_t trigger_time, void *cb_arg) {
-    os_type = detected_host_os();
-    if ((os_type == OS_MACOS) || (os_type == OS_IOS)) {
-        keymap_config.swap_lctl_lgui = keymap_config.swap_rctl_rgui = true;
+    os_type                    = detected_host_os();
+    uint8_t unicode_input_mode = 6; // Start with something that's out of bounds.
+    switch (os_type) {
+        case OS_MACOS:
+        case OS_IOS:
+            unicode_input_mode           = UNICODE_MODE_MACOS;
+            keymap_config.swap_lctl_lgui = keymap_config.swap_rctl_rgui = true;
+            break;
+        case OS_WINDOWS:
+            unicode_input_mode = UNICODE_MODE_WINCOMPOSE;
+            break;
+        case OS_LINUX:
+            unicode_input_mode = UNICODE_MODE_LINUX;
+            break;
+        default:
+            break;
     }
+#    if defined(UNICODE_ENABLE) || defined(UNICODEMAP_ENABLE)
+    if ((os_type != OS_UNSURE) && (unicode_input_mode < UNICODE_MODE_COUNT)) {
+        set_unicode_input_mode(unicode_input_mode);
+    }
+#    endif
     return os_type ? 0 : 500;
 }
 #endif
@@ -97,22 +98,18 @@ void keyboard_post_init_user(void) {
 #if defined(DEBUG) || !defined(NO_DEBUG)
     debug_enable = true;
 #endif
-#if defined(RGBLIGHT_ENABLE)
-#    if defined(RGBLIGHT_LAYERS)
+#if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_LAYERS)
     // Enable the LED layers
     rgblight_layers = namnlos_rgb_layers;
-#    endif // RGBLIGHT_LAYERS
     rgblight_enable();
-#endif // RGBLIGHT_ENABLE
+#endif
 #ifdef OLED_ENABLE
     if (userspace_config.oled_brightness != 0) {
         oled_set_brightness(userspace_config.oled_brightness);
     }
 #endif
     enable_keyboard_idle_control();
-
     keyboard_post_init_keymap();
-
 #if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
     defer_exec(100, os_specific_setup, NULL);
 #endif
@@ -195,12 +192,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #        ifdef KEY_OVERRIDE_ENABLE
             case KO_OFF:
 #        endif
-
                 blink_led_once();
 #    endif
                 break;
 #    ifdef NKRO_ENABLE
-#        ifdef PROMICRO_LED_STATUS
             case NK_TOGG:
                 if (!keymap_config.nkro) {
                     blink_led_twice(); // turning on
@@ -208,10 +203,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     blink_led_once(); // turning off
                 }
                 break;
-#        endif
 #    endif
 #    ifdef KEY_OVERRIDE_ENABLE
-#        ifdef PROMICRO_LED_STATUS
             case KO_TOGG:
                 if (key_override_is_enabled()) {
                     blink_led_once(); // turning off
@@ -219,7 +212,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     blink_led_twice(); // turning on
                 }
                 break;
-#        endif
 #    endif
 #endif
             case SK_NOT_EQL:
@@ -238,19 +230,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case CK_OBD:
                 step_oled_brightness(-15);
                 break;
-#endif // OLED_ENABLE
-            case KC_QWERTY:
-                SET_DEFAULT_LAYER(_BASE);
-                break;
-            case KC_KICAD:
-                SET_DEFAULT_LAYER(_KICAD);
-                break;
-            case KC_ADESK:
-                SET_DEFAULT_LAYER(_ADESK);
-                break;
-            case KC_GAMING:
-                SET_DEFAULT_LAYER(_GAMING);
-                break;
+#endif
 #ifdef BACKLIGHT_ENABLE
             case CK_BACKLIGHT_LEVEL_REPORT:
                 SEND_STRING("Backlight Level: ");
@@ -263,6 +243,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+/**
+ * @brief Set the default layer optionally saving it to EEPROM if EEPROM_DEFAULT_LAYER_SAVE is defined.
+ *
+ * @param layer the layer to set as the default.
+ */
+void SET_DEFAULT_LAYER(uint8_t layer) {
+#ifdef EEPROM_DEFAULT_LAYER_SAVE
+    eeconfig_update_default_layer(layer); // Save the default layer to EEPROM
+#endif
+    default_layer_set((layer_state_t)1u << layer);
+}
+
+uint8_t GET_DEFAULT_LAYER(void) {
+    return get_highest_layer(default_layer_state);
+}
+
+uint8_t GET_TOP_LAYER(void) {
+    return get_highest_layer(layer_state);
+}
+
 __attribute__((weak)) layer_state_t default_layer_state_set_keymap(layer_state_t state) {
     return state;
 }
@@ -271,7 +271,25 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
 #if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_LAYERS)
     rgblight_set_layer_state(0, layer_state_cmp(state, _BASE));
 #endif
+    return default_layer_state_set_keymap(state);
+}
+
+__attribute__((weak)) layer_state_t layer_state_set_keymap(layer_state_t state) {
     return state;
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+#if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_LAYERS)
+    rgblight_set_layer_state(1, layer_state_cmp(state, _SYMB));
+    rgblight_set_layer_state(2, layer_state_cmp(state, _NUMB));
+    rgblight_set_layer_state(3, layer_state_cmp(state, _MOUSE));
+    rgblight_set_layer_state(4, layer_state_cmp(state, _ADJST));
+#endif
+#ifndef NO_UPDATE_TRI_LAYER_STATE
+    return update_tri_layer_state(layer_state_set_keymap(state), _SYMB, _NUMB, _ADJST);
+#else
+    return layer_state_set_keymap(state);
+#endif
 }
 
 void matrix_scan_user(void) {
@@ -290,6 +308,7 @@ __attribute__((weak)) bool render_layer_state_keymap(void) {
 }
 
 void render_layer_state_user(void) {
+    /*
     static const char PROGMEM layer_status[5][6] = {
         // clang-format off
         {0xFC, 0xFF, 0xFD, 0xFD, 0xFE, 0},  // _BASE
@@ -299,6 +318,7 @@ void render_layer_state_user(void) {
         {0xFC, 0xFD, 0xFD, 0xFD, 0xFF, 0}   // OTHER
         // clang-format on
     };
+    */
     if (!render_layer_state_keymap()) {
         return;
     }
@@ -311,12 +331,20 @@ void render_layer_state_user(void) {
     oled_write_P(PSTR(OLED_LABEL_LAYER), false);
 #    endif
 
-    uint8_t highest_layer = get_highest_layer(layer_state);
-    if (highest_layer > 4) {
+    uint8_t highest_layer         = GET_TOP_LAYER();
+    uint8_t highest_default_layer = GET_DEFAULT_LAYER();
+    char    buf[6]                = {};
+    snprintf(buf, sizeof(buf), " %d %d ", highest_layer, highest_default_layer);
+    oled_write(buf, false);
+    /*
+    if ((highest_layer == _SVRK) && (highest_default_layer == _SVRK)) {
+        oled_write_P(PSTR(OLED_RENDER_LAYOUT_SVORAK), false);
+    } else if (highest_layer > 4) {
         oled_write_P(layer_status[4], false);
     } else {
         oled_write_P(layer_status[highest_layer], false);
     }
+    */
 }
 
 void render_keylock_status(void) {
@@ -383,8 +411,14 @@ void render_magic_status(void) {
 #    else
     OLED_PLACE_CURSOR_FULL(OLED_MAGIC_LINE, OLED_MAGIC_COL);
 #    endif
-#    if defined(OLED_DISPLAY_128X128) || defined(OLED_DISPLAY_128X64)
+
     uint8_t os = 0;
+#    if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
+    os = os_type < 3 ? os_type : 3;
+#    else
+    os                                      = keymap_config.swap_lctl_lgui ? 3 : 2;
+#    endif
+#    if defined(OLED_DISPLAY_128X128) || defined(OLED_DISPLAY_128X64)
     // clang-format off
     static const char PROGMEM os_logo[2][4][3] = {
         // Unsure           Linux            Windows          macOS
@@ -393,11 +427,6 @@ void render_magic_status(void) {
         };
     // clang-format on
 
-#        if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
-    os = os_type < 3 ? os_type : 3;
-#        else
-    os = keymap_config.swap_lctl_lgui ? 3 : 2;
-#        endif
     oled_write_P(PSTR("NK"), keymap_config.nkro);
     oled_write_P(oled_space, false);
     oled_write_P(os_logo[0][os], false);
@@ -410,19 +439,34 @@ void render_magic_status(void) {
     oled_write_P(oled_space, false);
     oled_write_P(os_logo[1][os], false);
 #    else
-    static const char PROGMEM magic_status[2][2][2] = {
+    static const char PROGMEM os_logo[4][2] = {
+        {0x00, 0}, // Unsure
+        {0x9D, 0}, // Linux
+        {0x9F, 0}, // Windows
+        {0x9E, 0}  // macOS
+    };
+
+    static const char PROGMEM magic_status[3][2][2] = {
         // clang-format off
-        {
+        { // NKRO
             {0x07, 0}, // NKRO off
             {0x08, 0}  // NKRO on
-        }, {
+        }, { // Swap LCtrl<->LGUI
             {0x9E, 0}, // Mac
             {0x9F, 0}  // Windows
+        }, { // Autocorrect
+            {0x13, 0},
+            {0x13, 0}
         }
         // clang-format on
     };
-    oled_write_P(magic_status[0][(uint8_t)keymap_config.nkro], false);
-    oled_write_P(magic_status[1][(uint8_t)!keymap_config.swap_lctl_lgui], false);
+
+    oled_write_P(magic_status[0][0], keymap_config.nkro);
+#        ifdef AUTOCORRECT_ENABLE
+    oled_write_P(magic_status[2][0], autocorrect_is_enabled());
+#        endif
+    oled_write_P(os_logo[os], false);
+    // uint8_t highest_default_layer = get_highest_layer(default_layer_state);
 #    endif
     // oled_write_P(magic_status[0][(uint8_t)keymap_config.nkro], false);
     // #    if defined(OLED_DISPLAY_128X128) || defined(OLED_DISPLAY_128X64) || (defined(OLED_HORIZONTAL) && (OLED_DISPLAY_WIDTH > 64))
@@ -513,47 +557,53 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 #endif // OLED_ENABLE
 
-__attribute__((weak)) layer_state_t layer_state_set_keymap(layer_state_t state) {
-    return state;
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-#if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_LAYERS)
-    rgblight_set_layer_state(1, layer_state_cmp(state, _SYMB));
-    rgblight_set_layer_state(2, layer_state_cmp(state, _NUMB));
-    rgblight_set_layer_state(3, layer_state_cmp(state, _MOUSE));
-    rgblight_set_layer_state(4, layer_state_cmp(state, _ADJST));
-#endif
-    return layer_state_set_keymap(state);
-}
-
 __attribute__((weak)) void shutdown_keymap(void) {}
-
-void shutdown_user(void) {
+void                       shutdown_user(void) {
 #ifdef OLED_ENABLE
-#    ifdef DEFERRED_EXEC_ENABLE
-#        ifdef RENDER_PET
+#    if defined(DEFERRED_EXEC_ENABLE) && defined(RENDER_PET)
     pet_control_off();
-#        endif // RENDER_PET
-#    endif     // DEFERRED_EXEC_ENABLE
+#    endif
     userspace_config.oled_brightness = oled_get_brightness();
     eeconfig_update_user(userspace_config.raw);
-#endif // OLED_ENABLE
+#endif
+    // Switch of any active special layers
+    if (layer_state_is(_GAMING)) {
+        layer_off(_GAMING);
+    }
+    if (layer_state_is(_ADESK)) {
+        layer_off(_ADESK);
+    }
+    if (layer_state_is(_KICAD)) {
+        layer_off(_KICAD);
+    }
+    if (layer_state_is(_LANG)) { // This will incidentally also switch off _SVRK
+        layer_off(_LANG);
+    }
     shutdown_keymap();
 }
 
 __attribute__((weak)) void suspend_power_down_keymap(void) {}
-
-void suspend_power_down_user(void) {
-#ifdef OLED_ENABLE
-#    ifdef DEFERRED_EXEC_ENABLE
-#        ifdef RENDER_PET
+void                       suspend_power_down_user(void) {
+#if defined(OLED_ENABLE)
+#    if defined(DEFERRED_EXEC_ENABLE) && defined(RENDER_PET)
     pet_control_off();
-#        endif // RENDER_PET
-#    endif     // DEFERRED_EXEC_ENABLE
+#    endif
     userspace_config.oled_brightness = oled_get_brightness();
     eeconfig_update_user(userspace_config.raw);
-#endif // OLED_ENABLE
+#endif
+    // Switch of any active special layers
+    if (layer_state_is(_GAMING)) {
+        layer_off(_GAMING);
+    }
+    if (layer_state_is(_ADESK)) {
+        layer_off(_ADESK);
+    }
+    if (layer_state_is(_KICAD)) {
+        layer_off(_KICAD);
+    }
+    if (layer_state_is(_LANG)) { // This will incidentally also switch off _SVRK
+        layer_off(_LANG);
+    }
     suspend_power_down_keymap();
 }
 
