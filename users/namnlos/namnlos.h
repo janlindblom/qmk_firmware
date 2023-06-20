@@ -202,10 +202,10 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation);
 #        endif
 #    else // This is a limited width display (like a 32x128 OLED)
 #        define OLED_RENDER_LAYOUT_QWERTY "QWRTY"
-#        define OLED_RENDER_LAYOUT_ADESK "ADesk"
+#        define OLED_RENDER_LAYOUT_ADESK "Fusio"
 #        define OLED_RENDER_LAYOUT_KICAD "KiCad"
 #        define OLED_RENDER_LAYOUT_GAMING "Game "
-#        define OLED_RENDER_LAYOUT_SVORAK "VORAK"
+#        define OLED_RENDER_LAYOUT_SVORAK "SVRAK"
 #        define OLED_RENDER_LAYER_LOWER "Lower"
 #        define OLED_RENDER_LAYER_SYMB "Symb "
 #        define OLED_RENDER_LAYER_NUMB "Numb "
@@ -222,8 +222,8 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation);
 #        define OLED_EMPTY_LINE "     "
 #        define PET_LINE 0
 #        define OLED_LAYER_LINE 0
-#        define OLED_MODS_LINE 2
-#        define OLED_KEYLOCK_LINE 5
+#        define OLED_MODS_LINE 3
+#        define OLED_KEYLOCK_LINE 6
 #        define OLED_WPM_LINE 9
 #        define OLED_STATUS_LINE 9
 #        define OLED_MAGIC_LINE 10
