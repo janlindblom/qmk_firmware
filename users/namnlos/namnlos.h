@@ -208,7 +208,10 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation);
 #        endif
 #    else // This is a limited width display (like a 32x128 OLED)
 #        define OLED_RENDER_LAYOUT_QWERTY "QWRTY"
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4bdbaf6c2e (Tweaking things and adding Svorak support.)
 #        define OLED_RENDER_LAYOUT_ADESK "ADesk"
 #        define OLED_RENDER_LAYOUT_KICAD "KiCad"
 #        define OLED_RENDER_LAYOUT_GAMING "Game "
