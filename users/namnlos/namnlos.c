@@ -308,7 +308,6 @@ __attribute__((weak)) bool render_layer_state_keymap(void) {
 }
 
 void render_layer_state_user(void) {
-    /*
     static const char PROGMEM layer_status[5][6] = {
         // clang-format off
         {0xFC, 0xFF, 0xFD, 0xFD, 0xFE, 0},  // _BASE
@@ -318,7 +317,17 @@ void render_layer_state_user(void) {
         {0xFC, 0xFD, 0xFD, 0xFD, 0xFF, 0}   // OTHER
         // clang-format on
     };
-    */
+
+    static const char PROGMEM layer_name[][OLED_RENDER_LAYER_NAME_LENGTH] = {
+        // clang-format off
+        [_BASE] = OLED_RENDER_LAYOUT_QWERTY,
+        [_SVRK] = OLED_RENDER_LAYOUT_SVORAK,
+        [_KICAD] = OLED_RENDER_LAYOUT_KICAD,
+        [_ADESK] = OLED_RENDER_LAYOUT_ADESK,
+        [_GAMING] = OLED_RENDER_LAYOUT_GAMING
+        // clang-format on
+    };
+
     if (!render_layer_state_keymap()) {
         return;
     }
@@ -331,20 +340,39 @@ void render_layer_state_user(void) {
     oled_write_P(PSTR(OLED_LABEL_LAYER), false);
 #    endif
 
-    uint8_t highest_layer         = GET_TOP_LAYER();
-    uint8_t highest_default_layer = GET_DEFAULT_LAYER();
-    char    buf[6]                = {};
-    snprintf(buf, sizeof(buf), " %d %d ", highest_layer, highest_default_layer);
-    oled_write(buf, false);
-    /*
-    if ((highest_layer == _SVRK) && (highest_default_layer == _SVRK)) {
-        oled_write_P(PSTR(OLED_RENDER_LAYOUT_SVORAK), false);
-    } else if (highest_layer > 4) {
-        oled_write_P(layer_status[4], false);
-    } else {
-        oled_write_P(layer_status[highest_layer], false);
+    uint8_t active_layer  = 4;
+    switch (GET_TOP_LAYER()) {
+        case _BASE:
+            active_layer = 0;
+            break;
+        case _LOWER:
+            active_layer = 1;
+            break;
+        case _RAISE:
+            active_layer = 2;
+            break;
+        case _ADJST:
+            active_layer = 3;
+        default:
+            break;
     }
-    */
+    oled_write_P(layer_status[active_layer], false);
+
+    uint8_t top_layer = GET_DEFAULT_LAYER();
+    if (top_layer != _BASE) {
+        switch (top_layer) {
+            case _SVRK:
+            case _ADESK:
+            case _KICAD:
+            case _GAMING:
+                oled_write_P(layer_name[top_layer], false);
+                break;
+            default:
+                break;
+        }
+    } else {
+        oled_write_P(PSTR(OLED_EMPTY_LINE), false);
+    }
 }
 
 void render_keylock_status(void) {
