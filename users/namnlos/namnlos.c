@@ -18,10 +18,8 @@
 #include "send_string.h"
 #include "os_detection.h"
 #include "host.h"
-#if defined(UNICODE_ENABLE)
+#if defined(UNICODE_ENABLE) || defined(UNICODEMAP_ENABLE)
 #    include "unicode.h"
-#elif defined(UNICODEMAP_ENABLE)
-#    include "unicodemap.h"
 #endif
 #include "namnlos.h"
 #include "extensions/tap_dance.h"
