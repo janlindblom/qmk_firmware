@@ -88,6 +88,8 @@ enum custom_keycodes {
     CK_BACKLIGHT_LEVEL_REPORT,
     SK_BLL = CK_BACKLIGHT_LEVEL_REPORT,
 #endif
+    CK_DLEFT,
+    CK_DRGHT,
 };
 
 void SET_DEFAULT_LAYER(uint8_t layer);

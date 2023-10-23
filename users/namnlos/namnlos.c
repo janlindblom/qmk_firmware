@@ -236,6 +236,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING(SS_TAP(X_ENTER));
                 break;
 #endif
+#if defined(OS_DETECTION_ENABLE)
+            case CK_DLEFT:
+                if (os_type == OS_LINUX) {
+                    tap_code16(LAG(KC_LEFT));
+                }
+                break;
+            case CK_DRGHT:
+                if (os_type == OS_LINUX) {
+                    tap_code16(LAG(KC_RIGHT));
+                }
+                break;
+#endif
         }
     }
     return true;
