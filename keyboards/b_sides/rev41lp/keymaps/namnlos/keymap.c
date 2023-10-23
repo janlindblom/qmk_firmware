@@ -81,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     SK_NOT_EQL,  SE_EXLM,    SE_AT,  SE_LCBR,  SE_RCBR,   SE_PIPE,             SE_PND,  SE_EURO,  SE_QUES,  SE_SECT,  SE_CURR,  SE_DIAE,
         SK_LEQ,  SE_HASH,   SE_DLR,  SE_LPRN,  SE_RPRN,    SE_GRV,            SE_PLUS,  SE_MINS,  SE_SLSH,  SE_ASTR,  SE_PERC,  SE_DQUO,
         SK_GEQ,  SE_PERC,  SE_CIRC,  SE_LBRC,  SE_RBRC,   SE_TILD,            SE_AMPR,   SE_EQL,  SE_LABK,  SE_RABK,  SE_BSLS,  SE_ACUT,
-                                               _______,   _______,  _______,  _______,  _______
+                                               _______,   _______,  _______,  _______,  CK_DRGHT
     ),
 
     [_RAISE] = LAYOUT(
