@@ -9,6 +9,7 @@ OLED_ENABLE          = no
 KEY_OVERRIDE_ENABLE  = yes
 COMMAND_ENABLE       = no
 AUTOCORRECT_ENABLE   = yes
+AUTO_SHIFT_ENABLE    = yes
 NKRO_ENABLE          = yes
 DEFERRED_EXEC_ENABLE = yes
 LTO_ENABLE           = yes
