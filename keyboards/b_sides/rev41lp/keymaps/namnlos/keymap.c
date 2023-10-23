@@ -81,14 +81,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     SK_NOT_EQL,  SE_EXLM,    SE_AT,  SE_LCBR,  SE_RCBR,   SE_PIPE,             SE_PND,  SE_EURO,  SE_QUES,  SE_SECT,  SE_CURR,  SE_DIAE,
         SK_LEQ,  SE_HASH,   SE_DLR,  SE_LPRN,  SE_RPRN,    SE_GRV,            SE_PLUS,  SE_MINS,  SE_SLSH,  SE_ASTR,  SE_PERC,  SE_DQUO,
         SK_GEQ,  SE_PERC,  SE_CIRC,  SE_LBRC,  SE_RBRC,   SE_TILD,            SE_AMPR,   SE_EQL,  SE_LABK,  SE_RABK,  SE_BSLS,  SE_ACUT,
-                                               _______,   _______,  _______,  _______,  CK_DRGHT
+                                               CK_DLEFT,   _______,  _______,  _______,  CK_DRGHT
     ),
 
     [_RAISE] = LAYOUT(
         SE_SECT,   SE_1,     SE_2,     SE_3,     SE_4,     SE_5,                 SE_6,    SE_7,    SE_8,    SE_9,    SE_0,  KC_MUTE,
         KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,              KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_PGUP,  KC_VOLU,
         KC_F7,    KC_F8,    KC_F9,   KC_F10,   KC_F11,   KC_F12,              CK_WLFT, CK_WRGT, KC_HOME,  KC_END, KC_PGDN,  KC_VOLD,
-                                                CK_DLEFT,  _______,  KC_ENT,  _______,  _______
+                                                CK_DLEFT,  _______,  KC_ENT,  _______,  CK_DRGHT
     ),
 
     [_ADJST] = LAYOUT(
