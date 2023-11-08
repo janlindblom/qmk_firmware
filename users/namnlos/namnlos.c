@@ -237,14 +237,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 break;
 #endif
 #if defined(OS_DETECTION_ENABLE)
+#define LCG(kc) (QK_LCTL | QK_LGUI | (kc))
             case CK_DLEFT:
                 if (os_type == OS_LINUX) {
                     tap_code16(LAG(KC_LEFT));
+                } else if (os_type == OS_WINDOWS) {
+                    tap_code16(LCG(KC_LEFT));
                 }
                 break;
             case CK_DRGHT:
                 if (os_type == OS_LINUX) {
                     tap_code16(LAG(KC_RIGHT));
+                } else if (os_type == OS_WINDOWS) {
+                    tap_code16(LCG(KC_RIGHT));
                 }
                 break;
 #endif
