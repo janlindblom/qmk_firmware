@@ -62,6 +62,10 @@ enum layers {
     _ADJST, // Adjustments and system
 };
 
+#if defined(OS_DETECTION_ENABLE)
+#    define LCG(kc) (QK_LCTL | QK_LGUI | (kc))
+#endif
+
 //// Combined keys
 #define CK_UNDO LCTL(KC_Z)
 #define CK_CUT LCTL(KC_X)
