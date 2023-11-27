@@ -237,7 +237,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 break;
 #endif
 #if defined(OS_DETECTION_ENABLE)
-#define LCG(kc) (QK_LCTL | QK_LGUI | (kc))
             case CK_DLEFT:
                 if (os_type == OS_LINUX) {
                     tap_code16(LAG(KC_LEFT));
@@ -663,6 +662,9 @@ void suspend_wakeup_init_user(void) {
     eeconfig_update_user(userspace_config.raw);
 #endif // OLED_ENABLE
     suspend_wakeup_init_keymap();
+#if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
+    defer_exec(100, os_specific_setup, NULL);
+#endif
 }
 
 __attribute__((weak)) bool led_update_keymap(led_t led_state) {
