@@ -237,7 +237,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 break;
 #endif
 #if defined(OS_DETECTION_ENABLE)
-#define LCG(kc) (QK_LCTL | QK_LGUI | (kc))
             case CK_DLEFT:
                 if (detected_host_os() == OS_LINUX) {
                     tap_code16(LAG(KC_LEFT));
