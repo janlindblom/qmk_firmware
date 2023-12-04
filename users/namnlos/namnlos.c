@@ -599,8 +599,10 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 #endif // OLED_ENABLE
 
-__attribute__((weak)) void shutdown_keymap(void) {}
-void                       shutdown_user(void) {
+__attribute__((weak)) bool shutdown_keymap(bool jump_to_bootloader) {
+    return true;
+}
+bool                       shutdown_user(bool jump_to_bootloader) {
 #ifdef OLED_ENABLE
 #    if defined(DEFERRED_EXEC_ENABLE) && defined(RENDER_PET)
     pet_control_off();
@@ -621,7 +623,7 @@ void                       shutdown_user(void) {
     if (layer_state_is(_LANG)) { // This will incidentally also switch off _SVRK
         layer_off(_LANG);
     }
-    shutdown_keymap();
+    return shutdown_keymap(jump_to_bootloader);
 }
 
 __attribute__((weak)) void suspend_power_down_keymap(void) {}
