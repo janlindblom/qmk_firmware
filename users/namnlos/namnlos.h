@@ -112,7 +112,7 @@ void keyboard_pre_init_keymap(void);
 void keyboard_pre_init_user(void);
 void eeconfig_init_keymap(void);
 void eeconfig_init_user(void);
-void shutdown_keymap(void);
+bool shutdown_keymap(bool jump_to_bootloader);
 void suspend_power_down_keymap(void);
 void suspend_wakeup_init_keymap(void);
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record);
