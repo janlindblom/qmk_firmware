@@ -238,16 +238,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif
 #if defined(OS_DETECTION_ENABLE)
             case CK_DLEFT:
-                if (os_type == OS_LINUX) {
+                if (detected_host_os() == OS_LINUX) {
                     tap_code16(LAG(KC_LEFT));
-                } else if (os_type == OS_WINDOWS) {
+                } else if (detected_host_os() == OS_WINDOWS) {
                     tap_code16(LCG(KC_LEFT));
                 }
                 break;
             case CK_DRGHT:
-                if (os_type == OS_LINUX) {
+                if (detected_host_os() == OS_LINUX) {
                     tap_code16(LAG(KC_RIGHT));
-                } else if (os_type == OS_WINDOWS) {
+                } else if (detected_host_os() == OS_WINDOWS) {
                     tap_code16(LCG(KC_RIGHT));
                 }
                 break;
@@ -354,7 +354,7 @@ void render_layer_state_user(void) {
     oled_write_P(PSTR(OLED_LABEL_LAYER), false);
 #    endif
 
-    uint8_t active_layer  = 4;
+    uint8_t active_layer = 4;
     switch (GET_TOP_LAYER()) {
         case _BASE:
             active_layer = 0;
@@ -456,9 +456,10 @@ void render_magic_status(void) {
 
     uint8_t os = 0;
 #    if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
-    os = os_type < 3 ? os_type : 3;
+    os_type = detected_host_os();
+    os      = os_type < 3 ? os_type : 3;
 #    else
-    os                                      = keymap_config.swap_lctl_lgui ? 3 : 2;
+    os = keymap_config.swap_lctl_lgui ? 3 : 2;
 #    endif
 #    if defined(OLED_DISPLAY_128X128) || defined(OLED_DISPLAY_128X64)
     // clang-format off
@@ -602,7 +603,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 __attribute__((weak)) bool shutdown_keymap(bool jump_to_bootloader) {
     return true;
 }
-bool                       shutdown_user(bool jump_to_bootloader) {
+bool shutdown_user(bool jump_to_bootloader) {
 #ifdef OLED_ENABLE
 #    if defined(DEFERRED_EXEC_ENABLE) && defined(RENDER_PET)
     pet_control_off();
