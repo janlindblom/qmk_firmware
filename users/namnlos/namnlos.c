@@ -354,7 +354,7 @@ void render_layer_state_user(void) {
     oled_write_P(PSTR(OLED_LABEL_LAYER), false);
 #    endif
 
-    uint8_t active_layer  = 4;
+    uint8_t active_layer = 4;
     switch (GET_TOP_LAYER()) {
         case _BASE:
             active_layer = 0;
@@ -603,7 +603,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 __attribute__((weak)) bool shutdown_keymap(bool jump_to_bootloader) {
     return true;
 }
-bool                       shutdown_user(bool jump_to_bootloader) {
+bool shutdown_user(bool jump_to_bootloader) {
 #ifdef OLED_ENABLE
 #    if defined(DEFERRED_EXEC_ENABLE) && defined(RENDER_PET)
     pet_control_off();
