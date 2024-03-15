@@ -1,0 +1,25 @@
+
+MOUSEKEY_ENABLE = yes   # Mouse keys
+TAP_DANCE_ENABLE = yes  # Let's dance
+UNICODE_ENABLE = yes    # Unicode
+COMBO_ENABLE = no       # Combos
+SPACE_CADET_ENABLE = no
+GRAVE_ESC_ENABLE = no
+RGBLIGHT_ENABLE = no
+RGB_MATRIX_ENABLE = no
+BACKLIGHT_ENABLE = no
+MIDI_ENABLE = no
+AUDIO_ENABLE = no
+ENCODER_ENABLE = no
+KEY_OVERRIDE_ENABLE = yes
+OLED_ENABLE = no
+WPM_ENABLE = no
+DEFERRED_EXEC_ENABLE = yes
+
+LTO_ENABLE = yes
+EXTRAFLAGS += -flto
+CONSOLE_ENABLE = no
+
+#Debug options
+VERBOSE = no
+DEBUG = no
