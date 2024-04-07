@@ -28,6 +28,8 @@
 
 #define KEYBOARD_SLEEP_TIMEOUT 120000u
 
+#define AUTO_SHIFT_DISABLED_AT_STARTUP
+
 /* If we enable mouse keys, we will end up with more than 8 layers,
    subsequently, if we don't need mousekeys we can save some space by switching
    to 8 bit layer state.
