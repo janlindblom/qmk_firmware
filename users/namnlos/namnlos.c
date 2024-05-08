@@ -236,7 +236,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING(SS_TAP(X_ENTER));
                 break;
 #endif
-#if defined(OS_DETECTION_ENABLE)
+#ifdef OS_DETECTION_ENABLE
             case CK_DLEFT:
                 if (detected_host_os() == OS_LINUX) {
                     tap_code16(LAG(KC_LEFT));
@@ -249,6 +249,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     tap_code16(LAG(KC_RIGHT));
                 } else if (detected_host_os() == OS_WINDOWS) {
                     tap_code16(LCG(KC_RIGHT));
+                }
+                break;
+            case CK_COPY:
+                if (detected_host_os() == OS_LINUX) {
+                    tap_code16(LCS(KC_C));
+                } else if (detected_host_os() == OS_WINDOWS) {
+                    tap_code16(LCTL(KC_C));
+                }
+                break;
+            case CK_PSTE:
+                if (detected_host_os() == OS_LINUX) {
+                    tap_code16(LCS(KC_V));
+                } else if (detected_host_os() == OS_WINDOWS) {
+                    tap_code16(LCTL(KC_V));
                 }
                 break;
 #endif
