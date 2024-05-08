@@ -62,8 +62,9 @@ enum layers {
     _ADJST, // Adjustments and system
 };
 
-#if defined(OS_DETECTION_ENABLE)
+#ifdef OS_DETECTION_ENABLE
 #    define LCG(kc) (QK_LCTL | QK_LGUI | (kc))
+#    define LCS(kc) (QK_LCTL | QK_LSFT | (kc))
 #endif
 
 //// Combined keys
@@ -94,6 +95,12 @@ enum custom_keycodes {
 #endif
     CK_DLEFT,
     CK_DRGHT,
+#ifdef OS_DETECTION_ENABLE
+    CK_COPY,
+    CK_PSTE,
+    CK_CUT,
+    CK_UNDO,
+#endif
 };
 
 void SET_DEFAULT_LAYER(uint8_t layer);
