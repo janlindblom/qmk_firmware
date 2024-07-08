@@ -251,14 +251,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     tap_code16(LCG(KC_RIGHT));
                 }
                 break;
-            case CK_COPY:
+            case CC_COPY:
                 if (detected_host_os() == OS_LINUX) {
                     tap_code16(LCS(KC_C));
                 } else if (detected_host_os() == OS_WINDOWS) {
                     tap_code16(LCTL(KC_C));
                 }
                 break;
-            case CK_PSTE:
+            case CC_PSTE:
                 if (detected_host_os() == OS_LINUX) {
                     tap_code16(LCS(KC_V));
                 } else if (detected_host_os() == OS_WINDOWS) {

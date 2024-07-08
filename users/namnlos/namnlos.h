@@ -96,10 +96,10 @@ enum custom_keycodes {
     CK_DLEFT,
     CK_DRGHT,
 #ifdef OS_DETECTION_ENABLE
-    CK_COPY,
-    CK_PSTE,
-    CK_CUT,
-    CK_UNDO,
+    CC_COPY,
+    CC_PSTE,
+    CC_CUT,
+    CC_UNDO,
 #endif
 };
 
